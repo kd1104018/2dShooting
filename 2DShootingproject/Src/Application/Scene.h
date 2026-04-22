@@ -24,7 +24,7 @@ public:
 
 	// GUIˆ—
 	void ImGuiUpdate();
-
+	bool test = false;
 private:
 	TitleScene*m_titleScene = nullptr;
 	Scene() {}
