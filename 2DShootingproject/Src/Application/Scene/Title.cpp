@@ -11,7 +11,7 @@ void TitleScene::Update()
 }
 void TitleScene::Init()
 {
-	m_titleTex.Load("../Texture/title.png");
+	m_titleTex.Load("../../../../Texture/title.png");
 }
 void TitleScene::Release()
 {

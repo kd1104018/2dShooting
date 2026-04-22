@@ -1,11 +1,11 @@
 #pragma once
-class TitleScene;
+class BaseSccene;
 
 
 class Scene
 {
 private:
-
+	
 	
 
 public:
@@ -26,7 +26,7 @@ public:
 	void ImGuiUpdate();
 	
 private:
-	TitleScene*m_titleScene = nullptr;
+
 	Scene() {}
 
 public:

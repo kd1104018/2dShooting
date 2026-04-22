@@ -49,6 +49,15 @@
     <Filter Include="Src\Application\Object">
       <UniqueIdentifier>{cccc10fb-4eea-450c-a0ec-042f08f12baf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Scene\TitleScene">
+      <UniqueIdentifier>{51ec3510-ca2e-441d-ba67-1d58f31b2ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\GameScene">
+      <UniqueIdentifier>{e5e06dbb-dd63-4271-8968-6f274f0da947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\BaseScene">
+      <UniqueIdentifier>{145f98e1-e2ca-46d2-992d-7ef967ef4249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -144,14 +153,17 @@
     <ClInclude Include="Src\Application\Scene.h">
       <Filter>Src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Scene\Title.h">
-      <Filter>Src\Application\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\Scene\Game.h">
-      <Filter>Src\Application\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Object\CharaBase.h">
       <Filter>Src\Application\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Scene\Title.h">
+      <Filter>Src\Application\Scene\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Scene\Game.h">
+      <Filter>Src\Application\Scene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\5月発表用\2DShootingproject\Src\Application\Scene\BaseScene\BaseScene.h">
+      <Filter>Src\Application\Scene\BaseScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,14 +230,17 @@
     <ClCompile Include="Src\Application\Scene.cpp">
       <Filter>Src\Application</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Scene\Title.cpp">
-      <Filter>Src\Application\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\Scene\Game.cpp">
-      <Filter>Src\Application\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Object\CharaBase.cpp">
       <Filter>Src\Application\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\Title.cpp">
+      <Filter>Src\Application\Scene\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\Game.cpp">
+      <Filter>Src\Application\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\5月発表用\2DShootingproject\Src\Application\Scene\BaseScene\BaseScene.cpp">
+      <Filter>Src\Application\Scene\BaseScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

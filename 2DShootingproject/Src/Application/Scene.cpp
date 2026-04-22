@@ -14,8 +14,8 @@ void Scene::Update()
 
 void Scene::Init()
 {
-
-	m_titleScene->Init();	
+	m_nowScene = std::make_shared<GameScene>();
+	
 }
 
 void Scene::Release()
