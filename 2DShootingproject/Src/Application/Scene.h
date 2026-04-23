@@ -1,5 +1,5 @@
 #pragma once
-class BaseSccene;
+class BaseScene;
 
 
 class Scene
@@ -24,7 +24,21 @@ public:
 
 	// GUIˆ—
 	void ImGuiUpdate();
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	std::shared_ptr<BaseScene>m_nowScene;
 private:
 
 	Scene() {}

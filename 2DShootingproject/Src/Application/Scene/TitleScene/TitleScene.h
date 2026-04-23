@@ -2,7 +2,7 @@
 
 
 #include "../BaseScene/BaseScene.h"
-class TitleScene
+class TitleScene :public BaseScene
 {
 public:
 
@@ -12,13 +12,13 @@ public:
 
 
 	// ‰Šúİ’è
-	void Init();
+	void Init()override;
 	// ‰ğ•ú
-	void Release();
+	void Release()override;
 	// XVˆ—
-	void Update();
+	void Update()override;
 	// •`‰æˆ—
-	void Draw2D();
+	void Draw2D()override;
 	// GUIˆ—
 	
 

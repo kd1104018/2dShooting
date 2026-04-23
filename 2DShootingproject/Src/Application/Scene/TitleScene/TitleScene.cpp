@@ -1,4 +1,4 @@
-#include"Title.h"
+#include"TitleScene.h"
 void TitleScene::Draw2D()
 {
 	Math::Rectangle rect(0, 0, 1280, 720);

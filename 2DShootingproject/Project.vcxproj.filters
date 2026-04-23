@@ -43,20 +43,20 @@
     <Filter Include="Src\System\Audio">
       <UniqueIdentifier>{667d1cb1-5ae5-476f-acd5-14b7d294a95a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\Scene">
-      <UniqueIdentifier>{347a9712-f019-4dde-9603-516f917e037b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\Object">
       <UniqueIdentifier>{cccc10fb-4eea-450c-a0ec-042f08f12baf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\Scene\TitleScene">
-      <UniqueIdentifier>{51ec3510-ca2e-441d-ba67-1d58f31b2ed8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\Scene\GameScene">
-      <UniqueIdentifier>{e5e06dbb-dd63-4271-8968-6f274f0da947}</UniqueIdentifier>
+    <Filter Include="Src\Application\Scene">
+      <UniqueIdentifier>{866c2662-5311-4d50-89a1-6bb6677d6e21}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Application\Scene\BaseScene">
-      <UniqueIdentifier>{145f98e1-e2ca-46d2-992d-7ef967ef4249}</UniqueIdentifier>
+      <UniqueIdentifier>{87d214d7-39b1-4912-821c-50ab73464e5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\GameScene">
+      <UniqueIdentifier>{56107ae0-34f0-4050-92ea-e204ed71ab48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\TitleScene">
+      <UniqueIdentifier>{5b7e009e-421a-4d50-8664-7afbb8673869}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,14 +156,14 @@
     <ClInclude Include="Src\Application\Object\CharaBase.h">
       <Filter>Src\Application\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Scene\Title.h">
-      <Filter>Src\Application\Scene\TitleScene</Filter>
+    <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h">
+      <Filter>Src\Application\Scene\BaseScene</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Scene\Game.h">
+    <ClInclude Include="Src\Application\Scene\GameScene\GameScene.h">
       <Filter>Src\Application\Scene\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\5月発表用\2DShootingproject\Src\Application\Scene\BaseScene\BaseScene.h">
-      <Filter>Src\Application\Scene\BaseScene</Filter>
+    <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h">
+      <Filter>Src\Application\Scene\TitleScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,14 +233,14 @@
     <ClCompile Include="Src\Application\Object\CharaBase.cpp">
       <Filter>Src\Application\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Scene\Title.cpp">
-      <Filter>Src\Application\Scene\TitleScene</Filter>
+    <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp">
+      <Filter>Src\Application\Scene\BaseScene</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Scene\Game.cpp">
+    <ClCompile Include="Src\Application\Scene\GameScene\GameScene.cpp">
       <Filter>Src\Application\Scene\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\5月発表用\2DShootingproject\Src\Application\Scene\BaseScene\BaseScene.cpp">
-      <Filter>Src\Application\Scene\BaseScene</Filter>
+    <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp">
+      <Filter>Src\Application\Scene\TitleScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
