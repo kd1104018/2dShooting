@@ -59,14 +59,14 @@ public:
 	struct cbLight
 	{
 		// ŠÂ‹«Œõ
-		Math::Vector3		AmbientLight = {0.3f, 0.3f, 0.3f};
+		Math::Vector3		AmbientLight = { 0.3f, 0.3f, 0.3f };
 		float					tmp;
 
 		// •½sŒõ
-		Math::Vector3		DL_Dir = {0,-1,0};    // Œõ‚Ì•ûŒü
+		Math::Vector3		DL_Dir = { 0,-1,0 };    // Œõ‚Ì•ûŒü
 		float					tmp2;
 
-		Math::Vector3		DL_Color = {1,1,1};  // Œõ‚ÌF
+		Math::Vector3		DL_Color = { 1,1,1 };  // Œõ‚ÌF
 		float					tmp3;
 	};
 
@@ -89,7 +89,7 @@ private:
 	KdShaderManager() {}
 
 public:
-	static KdShaderManager &GetInstance() {
+	static KdShaderManager& GetInstance() {
 		static KdShaderManager instance;
 		return instance;
 	}

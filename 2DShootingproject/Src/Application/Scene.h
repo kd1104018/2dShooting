@@ -27,17 +27,6 @@ public:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	std::shared_ptr<BaseScene>m_nowScene;
 private:
 

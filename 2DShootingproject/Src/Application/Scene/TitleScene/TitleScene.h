@@ -1,30 +1,25 @@
 #pragma once 
 
-
+//継承の場合のみヘッダー内インクルード許可!!
 #include "../BaseScene/BaseScene.h"
-class TitleScene :public BaseScene
+
+class TitleScene : public BaseScene
 {
 public:
 
-	TitleScene() {}
+	TitleScene() { Init(); }
 	~TitleScene() {}
 
 
-
-	// 初期設定
+	//オーバーライドは基底クラスの関数を上書きする
 	void Init()override;
-	// 解放
-	void Release()override;
-	// 更新処理
 	void Update()override;
-	// 描画処理
 	void Draw2D()override;
-	// GUI処理
-	
-
+	void Release()override;
 private:
 
-	KdTexture m_titleTex;
-
-
+	float m_alpha = 1.0f;
+	float m_alphaadd = 0.01f;
+	KdTexture m_tex;
+	KdTexture m_starttex;
 };
