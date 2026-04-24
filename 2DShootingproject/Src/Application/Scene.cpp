@@ -4,6 +4,7 @@
 void Scene::Draw2D()
 {
 	SceneManager::Instance().Draw();
+	
 }
 
 void Scene::Update()

@@ -14,8 +14,7 @@ public:
 		Game,
 		Result,
 	};
-
-	void PreUpdate();
+	
 	void Update();
 	void Draw();
 
@@ -40,6 +39,8 @@ private:
 	SceneType m_currentSceneType = SceneType::Title;
 
 	SceneType m_nextSceneType = m_currentSceneType;
+
+	
 
 	//シングルトンパターン
 	// シングルトンパターンはクラスのインスタンスが1つしか存在しないことを保証するデザインパターン	

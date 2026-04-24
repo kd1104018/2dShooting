@@ -58,6 +58,9 @@
     <Filter Include="Src\Application\Scene\TitleScene">
       <UniqueIdentifier>{5b7e009e-421a-4d50-8664-7afbb8673869}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Player">
+      <UniqueIdentifier>{8e291565-78f9-4ed1-aa97-c69f81ba6960}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -153,9 +156,6 @@
     <ClInclude Include="Src\Application\Scene.h">
       <Filter>Src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Object\CharaBase.h">
-      <Filter>Src\Application\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h">
       <Filter>Src\Application\Scene\BaseScene</Filter>
     </ClInclude>
@@ -167,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="Src\Application\Scene\SceneManager.h">
       <Filter>Src\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Player\Player.h">
+      <Filter>Src\Application\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\BaseObject.h">
+      <Filter>Src\Application\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +239,6 @@
     <ClCompile Include="Src\Application\Scene.cpp">
       <Filter>Src\Application</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Object\CharaBase.cpp">
-      <Filter>Src\Application\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp">
       <Filter>Src\Application\Scene\BaseScene</Filter>
     </ClCompile>
@@ -247,6 +250,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp">
       <Filter>Src\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Player\Player.cpp">
+      <Filter>Src\Application\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\BaseObject.cpp">
+      <Filter>Src\Application\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once 
 #include "../BaseScene/BaseScene.h"
-
+class Player;
 
 class GameScene : public BaseScene
 {
@@ -20,4 +20,6 @@ private:
 	float m_alphaadd = 0.01f;
 	KdTexture m_tex;
 	KdTexture m_starttex;
+
+	Player* m_player = nullptr;		// 派生クラスのポインタ
 };

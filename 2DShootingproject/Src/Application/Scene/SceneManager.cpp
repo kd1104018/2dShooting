@@ -2,17 +2,14 @@
 #include"TitleScene/TitleScene.h"
 #include"GameScene/GameScene.h"
 
-void SceneManager::PreUpdate()
+void SceneManager::Update()
 {
 	if (m_currentSceneType != m_nextSceneType)
 	{
 		ChangeScene(m_nextSceneType);
 	}
-}
-
-void SceneManager::Update()
-{
 	m_CurrentScene->Update();
+	
 }
 
 void SceneManager::Draw()
