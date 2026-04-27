@@ -18,5 +18,5 @@ public:
 private:
 
 	void Release()override;
-
+	float           m_angle;
 };
