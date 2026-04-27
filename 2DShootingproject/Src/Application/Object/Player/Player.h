@@ -9,14 +9,14 @@ class Player : public BaseObject
 {
 public:
 	Player() { Init(); }
-	~Player() { Release(); }
+	~Player() override { Release(); }
 
-	void Update();
-	void Draw();
-	void Init();
+	void Update()override;
+	void Draw()override;
+	void Init()override;
 
 private:
 
-	void Release();
+	void Release()override;
 
 };

@@ -5,16 +5,16 @@ class BaseObject
 {
 public:
 	BaseObject() {}
-	~BaseObject() { Release(); }
+	virtual~BaseObject() { Release(); }
 
-	void Update();
-	void Init();
-	void Draw();
+	virtual void Update();
+	virtual void Init();
+	virtual void Draw();
 
-// protected : このクラスと派生先のクラス内からのみアクセス可能
+	// protected : このクラスと派生先のクラス内からのみアクセス可能
 protected:
 
-	void Release();
+	virtual	void Release();
 
 	KdTexture		m_tex;				// テクスチャ
 	Math::Vector3	m_pos = {};				// 座標

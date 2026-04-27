@@ -1,6 +1,6 @@
 #pragma once 
 #include "../BaseScene/BaseScene.h"
-class Player;
+class BaseObject;
 
 class GameScene : public BaseScene
 {
@@ -21,5 +21,6 @@ private:
 	KdTexture m_tex;
 	KdTexture m_starttex;
 
-	Player* m_player = nullptr;		// 派生クラスのポインタ
+	std::shared_ptr<BaseObject> m_player = nullptr;
+	std::shared_ptr<BaseObject> m_enemy = nullptr;
 };

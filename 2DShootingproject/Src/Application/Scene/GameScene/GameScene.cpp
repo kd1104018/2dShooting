@@ -4,6 +4,10 @@
 
 void GameScene::Init()
 {
+	m_player = std::make_shared<Player>();	// ①インスタンス確保と初期化	
+	m_player->Init();							// ②初期化	
+	//m_enemy = std::make_shared<Enemy>();	// ①インスタンス確保と初期化	
+	//m_enemy->Init();							// ②初期化	
 }
 
 void GameScene::Update()
