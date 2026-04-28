@@ -18,5 +18,7 @@ public:
 private:
 
 	void Release()override;
-
+	
+	float m_movex = 0.0f; // プレイヤーの移動量X
+	float m_movey = 0.0f; // プレイヤーの移動量Y
 };

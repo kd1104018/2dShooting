@@ -10,6 +10,14 @@ void Enemy::Update()
 
 	// 360度を超えたらリセット（必須ではないですが、数値の肥大化防止）
 	if (m_angle >= 360.0f) m_angle -= 360.0f;
+	if(-640-36>m_pos.x)
+	{
+		m_pos.x =640+32; // 左に移動
+	}
+	else
+	{
+		m_pos.x -= 10.0f; // 左に移動
+	}
 }
 void Enemy::Draw()
 {

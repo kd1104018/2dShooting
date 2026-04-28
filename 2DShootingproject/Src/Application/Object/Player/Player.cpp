@@ -6,20 +6,36 @@ void Player::Update()
 	// 移動
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
-		m_pos.x -= 5;
+		m_movex -= 2; // 左に移動
 	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+	else if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 	{
-		m_pos.x += 5;
+		m_movex += 2; // 右に移動
 	}
-	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	else if (GetAsyncKeyState(VK_UP) & 0x8000)
 	{
-		m_pos.y += 5;
+		m_movey += 2; // 上に移動
 	}
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	else if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 	{
-		m_pos.y -= 5;
+		m_movey -= 2; // 下に移動
 	}
+	else
+	{
+		m_pos.x *= 0.5f;
+		m_pos.y *= 0.5f;
+
+
+		if (m_movex >= -0.8f && m_movex <= 0.8f) {
+			m_movex = 0;
+		}
+		if (m_movey >= -0.8f && m_movey <= 0.8f) {
+			m_movey = 0;
+		}
+	}
+	
+	m_pos.x += m_movex;
+	m_pos.y += m_movey;
 }
 
 void Player::Draw()
