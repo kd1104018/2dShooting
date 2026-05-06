@@ -14,6 +14,16 @@ public:
 	void Update()override;
 	void Draw2D()override;
 	void Release()override;
+
+	std::vector<std::shared_ptr<BaseObject>> GetObjList()
+	{
+		return m_objList;
+	}
+	void AddObject(std::shared_ptr<BaseObject> obj)
+	{
+		m_objList.push_back(obj);
+	}
+	std::vector<std::shared_ptr<BaseObject>>m_objList;
 private:
 
 	float m_alpha = 1.0f;
@@ -23,4 +33,8 @@ private:
 
 	std::shared_ptr<BaseObject> m_player = nullptr;
 	std::shared_ptr<BaseObject> m_enemy = nullptr;
+
+	unsigned long score = 0;
+	static const int maxDigit = 10;
+	int digits[maxDigit] = {};
 };

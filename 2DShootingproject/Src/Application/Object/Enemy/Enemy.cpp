@@ -52,6 +52,7 @@ void Enemy::Init()
 	m_pos = { 640,0 };
 	m_angle = 0.0f;    // 0度で初期化
 	m_aliveFlg = true;
+	m_objType = ObjectType::Enemy;		// 種類は「敵」
 }
 void Enemy::Release()
 {

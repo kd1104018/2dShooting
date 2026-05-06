@@ -6,22 +6,30 @@
 
 void GameScene::Init()
 {
-	// ②初期化	
-	m_player = std::make_shared<Player>();	// ①インスタンス確保と初期化	
-	m_player->Init();							// ②初期化	
-	//m_enemy = std::make_shared<Enemy>();	// ①インスタンス確保と初期化	
-	//m_enemy->Init();							// ②初期化	
-	m_enemy = std::make_shared<Enemy>();	// ①インスタンス確保と初期化	
-	m_enemy->Init();
+	std::shared_ptr<Player> player;
+
+	player = std::make_shared<Player>();
+	player->Init();
+	player->SetOwner(this);	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを渡す
+	m_objList.push_back(player);
+
+	// エネミー
+	std::shared_ptr<Enemy> enemy;
+	for (int i = 0; i < 10; ++i)
+	{
+		enemy = std::make_shared<Enemy>();	// ①インスタンスを生成
+		enemy->Init();						// ②初期化
+		m_objList.push_back(enemy);			// ③リストへ追加
+	}
 
 }
 
 void GameScene::Update()
 {
-	m_player->Update();
-	m_enemy->Update();
+	//m_player->Update();
+	//m_enemy->Update();
 
-	if (GetAsyncKeyState('Z') & 0x8000)
+	/*if (GetAsyncKeyState('Z') & 0x8000)
 	{
 		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Title);
 	}
@@ -42,21 +50,50 @@ void GameScene::Update()
 			m_score = 0;
 		}
 	}
+	++i;
 	unsigned long tmp = m_score;
 	for (int i = maxDigit-1; i  >=0; --i)
 	{
 		m_digits[i] = tmp % 10;
 		tmp /= 10;
+	}*/
+	auto it = m_objList.begin();
+
+	while (it != m_objList.end())	// end() は 最後の要素の1個後ろを返す
+	{
+		// オブジェクトの有効チェック
+		if ((*it)->GetAliveFlg() == false)
+		{
+			// 無効なオブジェクトをリストから削除
+			it = m_objList.erase(it);
+		}
+		else
+		{
+			it++;	// 次の要素へイテレータを進める
+		}
+	}
+	
+
+	for (int i = 0; i < m_objList.size(); ++i)
+	{
+		m_objList[i]->Update();
 	}
 }
 
 void GameScene::Draw2D()
 {
 
-	m_player->Draw();
-	m_enemy->Draw();
-
-
+	for (int i = 0; i < m_objList.size(); ++i)
+	{
+		m_objList[i]->Draw();
+	}
+	/*KdShaderManager::GetInstance().m_spriteShader.DrawTex(
+		&m_starttex, 0,100,200,100);
+for (int i = 0; i < maxDigit; ++i)
+	{
+		KdShaderManager::GetInstance().m_spriteShader.DrawTex(
+			&m_tex, 200 + i * 20, 100, 20, 30, &Math::Rectangle(m_digits[i] * 20, 0, 20, 30));
+}*/
 
 }
 

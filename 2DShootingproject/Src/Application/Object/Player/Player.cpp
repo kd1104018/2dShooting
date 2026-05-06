@@ -1,8 +1,9 @@
 ﻿#include "Player.h"
+#include"../../Scene/GameScene/GameScene.h"
+#include"../Bullet/Bullet.h"
 
 void Player::Update()
 {
-
 	// 移動
 	if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 	{
@@ -19,6 +20,34 @@ void Player::Update()
 	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 	{
 		m_pos.y -= 5;
+	}
+
+	// 弾発射
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
+	{
+		// 弾１個分のインスタンスを生成 & 初期化してリストへ追加
+		std::shared_ptr<Bullet> bullet;
+		bullet = std::make_shared<Bullet>();	// ①生成
+		bullet->Init();							// ②初期化
+		bullet->SetPos(m_pos);					// ③プレイヤーと同じ座標にセット
+		m_owner->AddObject(bullet);				// ④リストに追加
+	}
+	for (auto& obj : m_owner->GetObjList())
+	{
+
+		// オブジェクトに対する処理
+		if (obj->GetObjType() == ObjectType::Enemy)
+		{
+
+			// 対象の座標（ベクトル） - 自分の座標（ベクトル） = 対象へのベクトル（矢印）
+			Math::Vector3 v;
+			v = obj->GetPos() - m_pos;
+			//弾判定...ベクトルの長さで判定
+			if (v.Length() < 64.0f)
+			{
+				obj->OnHit();	// 当たったときの処理
+			}
+		}
 	}
 }
 
@@ -38,6 +67,7 @@ void Player::Init()
 	m_tex.Load("Texture/player.png");
 	m_pos = {};	// 0,0 で初期化
 	m_aliveFlg = true;
+	m_objType = ObjectType::Player;	// 種類は「プレイヤー」
 }
 
 void Player::Release()
