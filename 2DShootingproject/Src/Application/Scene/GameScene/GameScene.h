@@ -29,11 +29,14 @@ private:
 	float m_alpha = 1.0f;
 	float m_alphaadd = 0.01f;
 	KdTexture m_tex;
+	
 	KdTexture m_starttex;
+
 
 	std::shared_ptr<BaseObject> m_player = nullptr;
 	std::shared_ptr<BaseObject> m_enemy = nullptr;
 	std::shared_ptr<BaseObject> m_bullet = nullptr;
+	
 
 	unsigned long score = 0;
 	static const int maxDigit = 10;

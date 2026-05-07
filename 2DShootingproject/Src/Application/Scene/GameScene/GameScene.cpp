@@ -2,11 +2,13 @@
 #include "../SceneManager.h"
 #include "../../Object//Player/Player.h"
 #include "../../Object//Enemy/Enemy.h"
-#include "../../Object//Bullet/Bullet.h"
+#include "../../Object/Bullet/Bullet.h"
+#include "../../Object/Life/Life.h"
 
 
 void GameScene::Init()
 {
+
 	std::shared_ptr<Player> player;
 
 	player = std::make_shared<Player>();
@@ -20,9 +22,11 @@ void GameScene::Init()
 	{
 		enemy = std::make_shared<Enemy>();	// ①インスタンスを生成
 		enemy->Init();						// ②初期化
-		m_objList.push_back(enemy);			// ③リストへ追加
+		
+		enemy->SetOwner(this);	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを渡す
+		m_objList.push_back(enemy);
 	}
-	
+
 
 
 
@@ -76,7 +80,7 @@ void GameScene::Update()
 			it++;	// 次の要素へイテレータを進める
 		}
 	}
-	
+
 
 	for (int i = 0; i < m_objList.size(); ++i)
 	{

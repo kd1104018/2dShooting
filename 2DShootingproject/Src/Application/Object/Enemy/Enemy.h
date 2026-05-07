@@ -16,11 +16,12 @@ public:
 	void Draw()override;
 	void Init()override;
 	void OnHit()override;
-
+	void SetOwner(GameScene* _owner) { m_owner = _owner; }
 private:
 
 	void Release()override;
 	float           m_angle;
 	// 追加: 上下移動の速度（符号で上下方向を表す）
 	float m_moveY = 5.0f;
+	GameScene* m_owner = nullptr;	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを持っている
 };

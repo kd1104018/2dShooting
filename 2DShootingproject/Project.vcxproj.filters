@@ -67,6 +67,9 @@
     <Filter Include="Src\Application\Object\Bullet">
       <UniqueIdentifier>{2a07ed28-e56b-4eab-903c-b972a837f2e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Life">
+      <UniqueIdentifier>{364dbd76-12ed-475c-90b1-2fed5b7d011b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -187,6 +190,9 @@
       <Filter>Src\Application\Object\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="Src\Application\Object\Life\Life.h">
+      <Filter>Src\Application\Object\Life</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -275,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp">
       <Filter>Src\Application\Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Life\Life.cpp">
+      <Filter>Src\Application\Object\Life</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

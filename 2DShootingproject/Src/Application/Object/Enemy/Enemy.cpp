@@ -1,35 +1,8 @@
 ﻿
 #include "Enemy.h"
+#include"../../Scene/GameScene/GameScene.h"
 
-//void Enemy::Update()
-//{
-//	if (!m_aliveFlg) return;
-//
-//	// 1フレームごとに2度回転させる
-//	m_angle += 2.0f;
-//
-//	// 360度を超えたらリセット（必須ではないですが、数値の肥大化防止）
-//	if (m_angle >= 360.0f) m_angle -= 360.0f;
-//	if (-640 - 36 > m_pos.x)
-//	{
-//		m_pos.x = 640 + 32; // 左に移動
-//	}
-//	else
-//	{
-//		m_pos.x -= 10.0f; // 左に移動
-//	}
-//	//上下運動
-//	float moveY = 5.0f; // 上下の移動量
-//	m_pos.y += moveY; // 上に移動
-//	if (m_pos.y > 100)
-//	{
-//		moveY *= -1.0f; // 下に移動
-//	}
-//	else if (m_pos.y < -100)
-//	{
-//		moveY *= -1.0f; // 上に移動
-//	}
-//}
+
 void Enemy::Draw()
 {
 	if (!m_aliveFlg) return;
@@ -62,15 +35,13 @@ void Enemy::Release()
 {
 	// テクスチャはkdTexture型のデストラクタでじどうでReleaseされるのでしなくてもよい
 }
-#include "Enemy.h"
 
 void Enemy::Update()
 {
 	if (!m_aliveFlg) return;
 
 	// 角度更新
-	m_angle += 2.0f;
-	if (m_angle >= 360.0f) m_angle -= 360.0f;
+	m_angle += 5.0f;    // 5度ずつ回転
 
 	// X移動（ラップ）
 	if (-640 - 36 > m_pos.x)
@@ -94,5 +65,23 @@ void Enemy::Update()
 	{
 		m_moveY = std::abs(m_moveY);
 	}
+	for (auto& obj : m_owner->GetObjList())
+	{
 
+		// オブジェクトに対する処理
+		if (obj->GetObjType() == ObjectType::Bullet)
+		{
+
+			// 対象の座標（ベクトル） - 自分の座標（ベクトル） = 対象へのベクトル（矢印）
+			Math::Vector3 v;
+			v = obj->GetPos() - m_pos;
+			//弾判定...ベクトルの長さで判定
+			if (v.Length() < 64.0f)
+			{
+				obj->OnHit();	// 当たったときの処理
+				m_aliveFlg = false;	// 敵は当たったときに消える
+
+			}
+		}
+	}
 }
