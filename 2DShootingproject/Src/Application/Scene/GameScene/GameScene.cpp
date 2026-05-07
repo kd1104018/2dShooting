@@ -26,6 +26,14 @@ void GameScene::Init()
 		enemy->SetOwner(this);	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを渡す
 		m_objList.push_back(enemy);
 	}
+	std::shared_ptr<Life> life;
+	for (int i = 0; i < m_lifeCount; ++i)
+	{
+		life = std::make_shared<Life>();	// ①インスタンスを生成
+		life->Init();						// ②初期化
+		life->SetPos({ 10.0f + i * 40.0f, 10.0f, 0.0f }); // ライフの位置を設定
+		m_objList.push_back(life);
+	}
 
 
 

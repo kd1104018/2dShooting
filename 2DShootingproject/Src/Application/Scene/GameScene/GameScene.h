@@ -37,8 +37,11 @@ private:
 	std::shared_ptr<BaseObject> m_enemy = nullptr;
 	std::shared_ptr<BaseObject> m_bullet = nullptr;
 	
+	
 
 	unsigned long score = 0;
 	static const int maxDigit = 10;
 	int digits[maxDigit] = {};
+	KdTexture m_lifeTex;
+	int m_lifeCount = 3;
 };

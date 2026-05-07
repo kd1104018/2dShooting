@@ -22,7 +22,6 @@ private:
 	
 	GameScene* m_owner = nullptr;	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを持っている
 
-	KdTexture m_lifeTex;	// ライフのテクスチャ
-	float life;
+	
 
 };

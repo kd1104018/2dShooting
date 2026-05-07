@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include"../../Scene/GameScene/GameScene.h"
 #include"../Bullet/Bullet.h"
+#include"../Life/Life.h"	
 
 void Player::Update()
 {
@@ -46,7 +47,7 @@ void Player::Update()
 			if (v.Length() < 64.0f)
 			{
 				obj->OnHit();	// 当たったときの処理
-				life - 1.0f;
+				
 				
 			}
 		}
@@ -55,12 +56,12 @@ void Player::Update()
 
 void Player::Draw()
 {
-	Math::Rectangle playerrc;
-	playerrc = { 0,0,64,64 };
+	Math::Rectangle rc;
+	rc = { 0,0,64,64 };
 
 	// 2D描画
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-		&m_tex, m_pos.x, m_pos.y, 64, 64, &playerrc);
+		&m_tex, m_pos.x, m_pos.y, 64, 64, &rc);
 	//  テクスチャ,X座標,Y座標,幅,高さ,切り取り範囲
 
 
@@ -69,11 +70,11 @@ void Player::Draw()
 
 void Player::Init()
 {
-	m_tex.Load("Texture/Life.png");
+	
 	m_tex.Load("Texture/player.png");
 	m_pos = {};	// 0,0 で初期化
 	m_aliveFlg = true;
-	float life;
+	
 	m_objType = ObjectType::Player;	// 種類は「プレイヤー」
 }
 
