@@ -3,7 +3,7 @@
 
 void Life::Update()
 {
-
+	//HPを減らすときに呼び出す
 
 }
 
@@ -21,6 +21,12 @@ void Life::Init()
 	m_pos = {};
 	m_aliveFlg = true;
 	m_objType = ObjectType::Life;		// 種類は「弾」
+}
+
+void Life::OnHit()
+{
+	m_aliveFlg = false;
+
 }
 
 void Life::Release()

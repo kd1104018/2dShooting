@@ -47,8 +47,14 @@ void Player::Update()
 			if (v.Length() < 64.0f)
 			{
 				obj->OnHit();	// 当たったときの処理
-				
-				
+				//HPを減らす処理
+				for (auto& uiObj : m_owner->GetObjList()) {
+					if (uiObj->GetObjType() == ObjectType::Life) {
+						uiObj->OnHit(); // Life::OnHit() が m_aliveFlg を false にする
+						break; // 1つだけ減らす
+
+					}
+				}
 			}
 		}
 	}
@@ -65,16 +71,16 @@ void Player::Draw()
 	//  テクスチャ,X座標,Y座標,幅,高さ,切り取り範囲
 
 
-	
+
 }
 
 void Player::Init()
 {
-	
+
 	m_tex.Load("Texture/player.png");
 	m_pos = {};	// 0,0 で初期化
 	m_aliveFlg = true;
-	
+
 	m_objType = ObjectType::Player;	// 種類は「プレイヤー」
 }
 

@@ -14,6 +14,7 @@ public:
 	void Update()override;
 	void Draw()override;
 	void Init()override;
+	
 	void SetOwner(GameScene* _owner) { m_owner = _owner; }
 
 private:
