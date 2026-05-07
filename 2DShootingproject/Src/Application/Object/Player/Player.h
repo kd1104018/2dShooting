@@ -22,6 +22,5 @@ private:
 	
 	GameScene* m_owner = nullptr;	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを持っている
 
-	float m_movex = 0.0f; // プレイヤーの移動量X
-	float m_movey = 0.0f; // プレイヤーの移動量Y
+	
 };

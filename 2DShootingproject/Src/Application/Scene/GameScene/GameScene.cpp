@@ -2,6 +2,7 @@
 #include "../SceneManager.h"
 #include "../../Object//Player/Player.h"
 #include "../../Object//Enemy/Enemy.h"
+#include "../../Object//Bullet/Bullet.h"
 
 
 void GameScene::Init()
@@ -21,6 +22,9 @@ void GameScene::Init()
 		enemy->Init();						// ‡A‰Šú‰»
 		m_objList.push_back(enemy);			// ‡BƒŠƒXƒg‚Ö’Ç‰Á
 	}
+	
+
+
 
 }
 

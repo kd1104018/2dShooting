@@ -4,6 +4,7 @@
 // 別のヘッダーファイルをインクルードするのはＮＧ
 // 継承元クラスのヘッダーのみインクルードが必須なので可とする
 #include "../BaseObject.h"
+class GameScene;
 
 class Enemy : public BaseObject
 {
@@ -14,6 +15,7 @@ public:
 	void Update()override;
 	void Draw()override;
 	void Init()override;
+	void OnHit()override;
 
 private:
 

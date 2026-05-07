@@ -54,6 +54,10 @@ void Enemy::Init()
 	m_aliveFlg = true;
 	m_objType = ObjectType::Enemy;		// 種類は「敵」
 }
+void Enemy::OnHit()
+{
+	m_aliveFlg = false;	// 当たったときは生存フラグをfalseにする
+}
 void Enemy::Release()
 {
 	// テクスチャはkdTexture型のデストラクタでじどうでReleaseされるのでしなくてもよい
@@ -90,4 +94,5 @@ void Enemy::Update()
 	{
 		m_moveY = std::abs(m_moveY);
 	}
+
 }
