@@ -8,6 +8,35 @@
 #include "../../Object/Shield/Shield.h"
 #include <random>
 
+
+// 更新処理: 詳細な擬似コード（日本語）
+// 1. m_objList のイテレータで全要素を走査し、GetAliveFlg() が false のオブジェクトを erase する。
+//    - erase はイテレータを無効化するので、戻り値（次の有効なイテレータ）を使って継続する。
+// 2. 残った全オブジェクトに対して Update() を呼ぶ。
+// 3. リスト中の Life オブジェクトの数をカウントする。
+//    - BaseObject 内にネストされた enum class ObjectType を使うので、比較は BaseObject::ObjectType::Life のように完全修飾する。
+// 4. ライフが 0 なら Player オブジェクトをリストから探して削除し、シーン遷移を設定する。
+//    - Player の比較も BaseObject::ObjectType::Player を使う。
+//    - プレイヤー削除後は SceneManager に次シーンを設定し、早期 return する。
+// 実装上の注意:
+// - m_objList は std::vector<std::shared_ptr<BaseObject>> なので、イテレータの扱いに注意する。
+// - erase を行うループとオブジェクトの Update を行うループは分離している（erase の後に Update を行う）。
+// - GetObjType() の返り値は BaseObject::ObjectType を想定しているため、スコープ修飾子を付ける必要がある。
+
+// 実装方針（詳細な擬似コード）
+// 1. 敵の出現 X 座標にランダムなオフセットとインデックスに基づく間隔を与えることで、右端から来るタイミングをずらす。
+//    - baseSpawnX = screenRightX を基準にする。
+//    - spawnSpacing を用いて各敵を段階的に右へずらす（i * spawnSpacing）。
+//    - distOffset を 0..maxOffset の範囲でランダムに生成してさらにばらつかせる。
+//    - 最終的な開始 X = baseSpawnX + i * spawnSpacing + offset。
+// 2. Y 座標は既存の distY(mt) を使ってランダムに決める（変更なし）。
+// 3. 他の初期化処理（Init, SetOwner, SetPos, m_objList.push_back）は従来どおり行う。
+// 4. この変更は Init() 内の敵生成ループのみを置き換える（ほかのロジックは維持）。
+//
+// 注意点:
+// - 画面外に出過ぎる場合は maxOffset を適切に調整してください（遅く来てほしいなら大きめに）。
+// - 必要なら敵ごとに移動速度を変えてさらに到達タイミングを調整できますが、ここでは開始 X の差で実現。
+
 void GameScene::Init()
 {
 
@@ -22,18 +51,26 @@ void GameScene::Init()
 	std::random_device rd;
 	std::mt19937 mt(rd());
 	// 画面幅／高さに合わせて範囲を調整してください
-	std::uniform_real_distribution<float> distX(-600.0f, 600.0f); // X 範囲
+	// 敵は画面の右端からスタートさせたいので X は固定値にする
+	const float screenRightX = 600.0f; // 画面右端の X 座標（必要に応じて変更）
 	std::uniform_real_distribution<float> distY(-500.0f, 500.0f); // Y 範囲
 
-	// エネミー
+	// エネミー（出現タイミングをずらすために X にオフセットと間隔を付与）
 	std::shared_ptr<Enemy> enemy;
+	// 敵の出現を段階的に遅らせるための間隔（ピクセル単位）
+	const float spawnSpacing = 80.0f;
+	// さらにランダムなオフセットを付与してばらつかせる最大幅
+	std::uniform_real_distribution<float> distOffset(0.0f, 400.0f);
+
 	for (int i = 0; i < 10; ++i)
 	{
 		enemy = std::make_shared<Enemy>();	// ①インスタンスを生成
 		enemy->Init();						// ②初期化
 
 		enemy->SetOwner(this);	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを渡す
-		const float rx = distX(mt);
+
+		// 右端固定を基準に、インデックスとランダムオフセットで開始 X をずらす
+		const float rx = screenRightX + i * spawnSpacing + distOffset(mt);
 		const float ry = distY(mt);
 		enemy->SetPos({ rx, ry, 0.0f });
 
@@ -59,21 +96,6 @@ void GameScene::Init()
 		m_objList.push_back(shield);
 	}
 }
-
-// 更新処理: 詳細な擬似コード（日本語）
-// 1. m_objList のイテレータで全要素を走査し、GetAliveFlg() が false のオブジェクトを erase する。
-//    - erase はイテレータを無効化するので、戻り値（次の有効なイテレータ）を使って継続する。
-// 2. 残った全オブジェクトに対して Update() を呼ぶ。
-// 3. リスト中の Life オブジェクトの数をカウントする。
-//    - BaseObject 内にネストされた enum class ObjectType を使うので、比較は BaseObject::ObjectType::Life のように完全修飾する。
-// 4. ライフが 0 なら Player オブジェクトをリストから探して削除し、シーン遷移を設定する。
-//    - Player の比較も BaseObject::ObjectType::Player を使う。
-//    - プレイヤー削除後は SceneManager に次シーンを設定し、早期 return する。
-// 実装上の注意:
-// - m_objList は std::vector<std::shared_ptr<BaseObject>> なので、イテレータの扱いに注意する。
-// - erase を行うループとオブジェクトの Update を行うループは分離している（erase の後に Update を行う）。
-// - GetObjType() の返り値は BaseObject::ObjectType を想定しているため、スコープ修飾子を付ける必要がある。
-
 void GameScene::Update()
 {
 	auto it = m_objList.begin();

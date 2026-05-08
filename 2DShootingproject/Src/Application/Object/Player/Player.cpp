@@ -26,12 +26,15 @@ void Player::Update()
 	// 弾発射
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 	{
-		// 弾１個分のインスタンスを生成 & 初期化してリストへ追加
-		std::shared_ptr<Bullet> bullet;
-		bullet = std::make_shared<Bullet>();	// ①生成
-		bullet->Init();							// ②初期化
-		bullet->SetPos(m_pos);					// ③プレイヤーと同じ座標にセット
-		m_owner->AddObject(bullet);				// ④リストに追加
+		for (int i = 0; i < 10; ++i)
+		{
+			// 弾１個分のインスタンスを生成 & 初期化してリストへ追加
+			std::shared_ptr<Bullet> bullet;
+			bullet = std::make_shared<Bullet>();	// ①生成
+			bullet->Init();							// ②初期化
+			bullet->SetPos(m_pos);					// ③プレイヤーと同じ座標にセット
+			m_owner->AddObject(bullet);				// ④リストに追加
+		}
 	}
 	for (auto& obj : m_owner->GetObjList())
 	{
