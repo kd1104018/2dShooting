@@ -11,6 +11,7 @@ public:
 		Enemy,
 		Bullet,
 		Life,
+		Shield,
 	};
 
 	BaseObject() {}
@@ -23,6 +24,7 @@ public:
 	ObjectType GetObjType() { return m_objType; }
 	Math::Vector3 GetPos() { return m_pos; }
 	bool GetAliveFlg() { return m_aliveFlg; }
+
 	// protected : このクラスと派生先のクラス内からのみアクセス可能
 protected:
 

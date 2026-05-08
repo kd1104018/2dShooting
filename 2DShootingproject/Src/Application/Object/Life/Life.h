@@ -7,7 +7,7 @@ class Life : public BaseObject
 {
 public:
 
-	Life() {}
+	Life() { Init(); }
 	~Life() { Release(); }
 
 	void Update() override;

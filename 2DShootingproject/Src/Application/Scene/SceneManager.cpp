@@ -1,6 +1,7 @@
 ﻿#include "SceneManager.h"
 #include"TitleScene/TitleScene.h"
 #include"GameScene/GameScene.h"
+#include"GameOverScene/GameOverScene.h"
 
 void SceneManager::Update()
 {
@@ -9,7 +10,7 @@ void SceneManager::Update()
 		ChangeScene(m_nextSceneType);
 	}
 	m_CurrentScene->Update();
-	
+
 }
 
 void SceneManager::Draw()
@@ -41,8 +42,12 @@ void SceneManager::ChangeScene(SceneType _Scenetype)
 		m_CurrentScene = std::make_shared<GameScene>();
 		break;
 	}
+	case SceneType::GameOver:
+	{
+		m_CurrentScene = std::make_shared<GameOverScene>();
+		break;
 	}
-
+	}
 	//2 シーン管理を更新
 	m_currentSceneType = _Scenetype;
 }

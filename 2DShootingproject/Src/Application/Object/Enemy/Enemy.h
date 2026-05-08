@@ -17,6 +17,10 @@ public:
 	void Init()override;
 	void OnHit()override;
 	void SetOwner(GameScene* _owner) { m_owner = _owner; }
+	void SetPos(Math::Vector3 _pos) { m_pos = _pos; }
+
+	void SetMoveY(float v) { m_moveY = v; }
+
 private:
 
 	void Release()override;

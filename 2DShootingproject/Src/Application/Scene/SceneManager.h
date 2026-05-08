@@ -12,6 +12,7 @@ public:
 		//int 型の列挙体を定義
 		Title,
 		Game,
+		GameOver,
 		Result,
 	};
 	

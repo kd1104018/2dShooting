@@ -26,7 +26,7 @@ void Life::Init()
 void Life::OnHit()
 {
 	m_aliveFlg = false;
-
+	
 }
 
 void Life::Release()

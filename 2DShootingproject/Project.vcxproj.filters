@@ -70,6 +70,12 @@
     <Filter Include="Src\Application\Object\Life">
       <UniqueIdentifier>{364dbd76-12ed-475c-90b1-2fed5b7d011b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Shield">
+      <UniqueIdentifier>{559fa440-5f2b-4325-9ca6-823cba47a656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Scene\GameOverScene">
+      <UniqueIdentifier>{94f51505-b64b-46ef-a2ff-fc9dd6367450}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -183,15 +189,21 @@
     <ClInclude Include="Src\Application\Object\BaseObject.h">
       <Filter>Src\Application\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Object\Enemy\Enemy.h">
-      <Filter>Src\Application\Object\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\Object\Bullet\Bullet.h">
       <Filter>Src\Application\Object\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Src\Application\Object\Life\Life.h">
       <Filter>Src\Application\Object\Life</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Shield\Shield.h">
+      <Filter>Src\Application\Object\Shield</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\Enemy.h">
+      <Filter>Src\Application\Object\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Scene\GameOverScene\GameOverScene.h">
+      <Filter>Src\Application\Scene\GameOverScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +296,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Life\Life.cpp">
       <Filter>Src\Application\Object\Life</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Shield\Shield.cpp">
+      <Filter>Src\Application\Object\Shield</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\GameOverScene\GameOverScene.cpp">
+      <Filter>Src\Application\Scene\GameOverScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
