@@ -1,9 +1,8 @@
 
 #pragma once 
 #include "../BaseScene/BaseScene.h"
-
 class BaseObject;
-class Shield;
+class Shield; // 追加：前方宣言
 
 class GameScene : public BaseScene
 {
@@ -12,6 +11,7 @@ public:
 	GameScene() { Init(); }
 	~GameScene() {}
 
+	//オーバーライドは基底クラスの関数を上書きする
 	void Init()override;
 	void Update()override;
 	void Draw2D()override;
@@ -38,14 +38,27 @@ private:
 	std::shared_ptr<BaseObject> m_player = nullptr;
 	std::shared_ptr<BaseObject> m_enemy = nullptr;
 	std::shared_ptr<BaseObject> m_bullet = nullptr;
+	// シールドを専用に保持（Player 追従用）
+	std::shared_ptr<Shield> m_shield = nullptr;
 
-	// シールドを専用メンバで保持（自機追従／UI 用など）
-	std::shared_ptr<Shield> m_shieldPlayer = nullptr;
-	std::shared_ptr<Shield> m_shieldUI = nullptr;
+
+
 
 	unsigned long score = 0;
 	static const int maxDigit = 10;
 	int digits[maxDigit] = {};
 	KdTexture m_lifeTex;
 	int m_lifeCount = 3;
+
+	// 敵スポーン制御（既存のまま）
+	int m_spawnCounter = 0;
+	int m_spawnIntervalFrames = 60;
+	int m_spawnedEnemies = 0;
+	int m_spawnMaxEnemies = 10;
+	float m_spawnBaseX = 600.0f;
+	float m_spawnSpacing = 80.0f;
+	float m_spawnOffsetMax = 400.0f;
+	float m_spawnYMin = -500.0f;
+	float m_spawnYMax = 500.0f;
+	float firstspown = 0.0f;
 };

@@ -22,7 +22,8 @@ private:
 	void Release()override;
 	
 	GameScene* m_owner = nullptr;	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを持っている
-
+	float m_shieldTime = 5.0f; // シールドの残り時間
+	float m_shieldCooldown = 0.0f; // シールドのクールダウン時間
 	
 
 };

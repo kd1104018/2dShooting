@@ -57,11 +57,11 @@ void Enemy::Update()
 	m_pos.y += m_moveY;
 
 	// 範囲を超えたら方向を反転
-	if (m_pos.y > 100.0f)
+	if (m_pos.y > 300.0f)
 	{
 		m_moveY = -std::abs(m_moveY);
 	}
-	else if (m_pos.y < -100.0f)
+	else if (m_pos.y < -300.0f)
 	{
 		m_moveY = std::abs(m_moveY);
 	}

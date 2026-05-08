@@ -1,4 +1,3 @@
-
 #include "GameScene.h"
 #include "../SceneManager.h"
 #include "../../Object//Player/Player.h"
@@ -27,7 +26,7 @@
 // 1. 敵の出現 X 座標にランダムなオフセットとインデックスに基づく間隔を与えることで、右端から来るタイミングをずらす。
 //    - baseSpawnX = screenRightX を基準にする。
 //    - spawnSpacing を用いて各敵を段階的に右へずらす（i * spawnSpacing）。
-//    - distOffset を 0..maxOffset の範囲でランダムに生成してさらにばらつかせる。
+//    - distOffset を 0..maxOffset の範囲でランダムに生成してさらにばらつかせる。  
 //    - 最終的な開始 X = baseSpawnX + i * spawnSpacing + offset。
 // 2. Y 座標は既存の distY(mt) を使ってランダムに決める（変更なし）。
 // 3. 他の初期化処理（Init, SetOwner, SetPos, m_objList.push_back）は従来どおり行う。
@@ -48,6 +47,14 @@ void GameScene::Init()
 	m_objList.push_back(player);
 	m_player = player; // 追加：プレイヤーをメンバに保持しておく
 
+	// プレイヤー追従用シールドを作成して登録
+	m_shield = std::make_shared<Shield>();
+	m_shield->Init();
+	m_shield->SetOwner(this);
+	// 初期位置をプレイヤーに合わせる
+	m_shield->SetPos(player->GetPos());
+	m_objList.push_back(m_shield);
+
 	std::random_device rd;
 	std::mt19937 mt(rd());
 	// 画面幅／高さに合わせて範囲を調整してください
@@ -60,7 +67,7 @@ void GameScene::Init()
 	// 敵の出現を段階的に遅らせるための間隔（ピクセル単位）
 	const float spawnSpacing = 80.0f;
 	// さらにランダムなオフセットを付与してばらつかせる最大幅
-	std::uniform_real_distribution<float> distOffset(0.0f, 400.0f);
+	std::uniform_real_distribution<float> distOffset(-400.0f, 400.0f);
 
 	for (int i = 0; i < 10; ++i)
 	{
@@ -86,7 +93,7 @@ void GameScene::Init()
 		m_objList.push_back(life);
 	}
 	//シールドを追加
-	//CD表示用と時期にかぶせる形で追加
+	//CD表示用と自機にかぶせる形で追加
 	for (int i = 0; i < 10; ++i)
 	{
 		std::shared_ptr<Shield> shield;
@@ -119,7 +126,12 @@ void GameScene::Update()
 		m_objList[i]->Update();
 	}
 
-		// 3) ライフ残数チェック（BaseObject にネストされた enum を完全修飾して比較）
+	// ここでプレイヤー追従シールドの位置を毎フレーム更新
+	if (m_shield && m_player) {
+		m_shield->SetPos(m_player->GetPos());
+	}
+
+	// 3) ライフ残数チェック（BaseObject にネストされた enum を完全修飾して比較）
 	int remainLife = 0;
 	for (const auto& obj : m_objList) {
 		if (obj->GetObjType() == BaseObject::ObjectType::Life) ++remainLife;

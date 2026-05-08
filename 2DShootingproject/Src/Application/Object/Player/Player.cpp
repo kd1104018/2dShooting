@@ -2,6 +2,8 @@
 #include"../../Scene/GameScene/GameScene.h"
 #include"../Bullet/Bullet.h"
 #include"../Life/Life.h"	
+#include"../Shield/Shield.h"
+#include <algorithm>
 
 void Player::Update()
 {
@@ -29,36 +31,65 @@ void Player::Update()
 		for (int i = 0; i < 10; ++i)
 		{
 			// 弾１個分のインスタンスを生成 & 初期化してリストへ追加
-			std::shared_ptr<Bullet> bullet;
-			bullet = std::make_shared<Bullet>();	// ①生成
-			bullet->Init();							// ②初期化
-			bullet->SetPos(m_pos);					// ③プレイヤーと同じ座標にセット
-			m_owner->AddObject(bullet);				// ④リストに追加
+			std::shared_ptr<Bullet> bullet = std::make_shared<Bullet>();
+			bullet->Init();
+			bullet->SetPos(m_pos);
+			m_owner->AddObject(bullet);
 		}
 	}
+
+	// 当たり判定（敵との）
 	for (auto& obj : m_owner->GetObjList())
 	{
-
-		// オブジェクトに対する処理
 		if (obj->GetObjType() == ObjectType::Enemy)
 		{
-
-			// 対象の座標（ベクトル） - 自分の座標（ベクトル） = 対象へのベクトル（矢印）
-			Math::Vector3 v;
-			v = obj->GetPos() - m_pos;
-			//弾判定...ベクトルの長さで判定
+			Math::Vector3 v = obj->GetPos() - m_pos;
 			if (v.Length() < 64.0f)
 			{
 				obj->OnHit();	// 当たったときの処理
-				//HPを減らす処理
+
+				// HPを減らす処理（ライフ表示オブジェクトを一つ消す）
 				for (auto& uiObj : m_owner->GetObjList()) {
 					if (uiObj->GetObjType() == ObjectType::Life) {
-						uiObj->OnHit(); // Life::OnHit() が m_aliveFlg を false にする
+						uiObj->OnHit();
 						break; // 1つだけ減らす
-
 					}
 				}
 			}
+		}
+	}
+
+	// ----------------------------
+	// Shield 管理（整理版）
+	// 毎フレームクールダウン/持続時間を更新（フレーム単位で扱う）
+	// m_shieldCooldown : 発動までの残りフレーム（<=0 で発動可能）
+	// m_shieldTime     : シールド残りフレーム（>0 の間シールド有効）
+	// ----------------------------
+
+
+	// 1. クールダウンを減らす（0以下にならないように制限）
+	if (m_shieldCooldown > 0) {
+		m_shieldCooldown -= 1.0f;
+	}
+
+	// 2. シールド発動チェック
+	if ((GetAsyncKeyState('D') & 0x8000) != 0) {
+		// クールダウンが終了している、かつ現在シールドが出ていない場合
+		if (m_shieldCooldown <= 0.0f) {
+
+			// シールド生成（1つだけ生成）
+			std::shared_ptr<Shield> shield = std::make_shared<Shield>();
+			shield->Init();
+			shield->SetOwner(m_owner);
+			shield->SetPos(m_pos);
+			shield->SetAliveFlg(true); // シールドを有効にする
+			m_owner->AddObject(shield);
+
+			// クールダウンを再設定（900フレーム = 60fpsなら15秒）
+			m_shieldCooldown = 900.0f;
+
+			// シールドの持続時間を設定（もし必要なら）
+			m_shieldTime = 300.0f;
 		}
 	}
 }
@@ -72,17 +103,17 @@ void Player::Draw()
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
 		&m_tex, m_pos.x, m_pos.y, 64, 64, &rc);
 	//  テクスチャ,X座標,Y座標,幅,高さ,切り取り範囲
-
-
-
 }
 
 void Player::Init()
 {
-
 	m_tex.Load("Texture/player.png");
 	m_pos = {};	// 0,0 で初期化
 	m_aliveFlg = true;
+
+	// シールド関連の初期値
+	m_shieldCooldown = 0.0f;
+	m_shieldTime = 0.0f;
 
 	m_objType = ObjectType::Player;	// 種類は「プレイヤー」
 }
