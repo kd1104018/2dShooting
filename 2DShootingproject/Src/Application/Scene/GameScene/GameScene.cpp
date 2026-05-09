@@ -5,6 +5,7 @@
 #include "../../Object/Bullet/Bullet.h"
 #include "../../Object/Life/Life.h"
 #include "../../Object/Shield/Shield.h"
+#include "../../Object/SecondEnemy/SecondEnemy.h"
 #include <random>
 
 
@@ -69,21 +70,7 @@ void GameScene::Init()
 	// さらにランダムなオフセットを付与してばらつかせる最大幅
 	std::uniform_real_distribution<float> distOffset(-400.0f, 400.0f);
 
-	for (int i = 0; i < 10; ++i)
-	{
-		enemy = std::make_shared<Enemy>();	// ①インスタンスを生成
-		enemy->Init();						// ②初期化
 
-		enemy->SetOwner(this);	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを渡す
-
-		// 右端固定を基準に、インデックスとランダムオフセットで開始 X をずらす
-		const float rx = screenRightX + i * spawnSpacing + distOffset(mt);
-		const float ry = distY(mt);
-		enemy->SetPos({ rx, ry, 0.0f });
-
-		m_objList.push_back(enemy);
-
-	}
 	std::shared_ptr<Life> life;
 	for (int i = 0; i < m_lifeCount; ++i)
 	{
@@ -126,10 +113,7 @@ void GameScene::Update()
 		m_objList[i]->Update();
 	}
 
-	// ここでプレイヤー追従シールドの位置を毎フレーム更新
-	if (m_shield && m_player) {
-		m_shield->SetPos(m_player->GetPos());
-	}
+
 
 	// 3) ライフ残数チェック（BaseObject にネストされた enum を完全修飾して比較）
 	int remainLife = 0;
@@ -147,6 +131,78 @@ void GameScene::Update()
 		}
 		SceneManager::Instance().SetNextScene(SceneManager::SceneType::GameOver);
 		return;
+	}
+	// ここでプレイヤー追従シールドの位置を毎フレーム更新
+	if (m_shield && m_player) {
+		m_shield->SetPos(m_player->GetPos());
+
+		std::shared_ptr<Player> playerPtr = std::dynamic_pointer_cast<Player>(m_player);
+		if (playerPtr) {
+			m_shield->SetVisible(playerPtr->IsShieldActive());
+		}
+	}
+	m_gameTimer++; // 毎フレーム時間を加算
+
+	// 300フレーム（約5秒）経過してから敵を出し始める
+	if (m_gameTimer > 300)
+	{
+		m_enemySpawnTimer--;
+
+		if (m_enemySpawnTimer <= 0)
+		{
+			// 上から降らせる設定（X座標はランダム）
+			float randomX = (float)(rand() % 1000 - 500);
+
+			// ーーーーーーーーーーーーーーーーーーーーーーーーー
+			// ★ フェーズ1：まだ普通の敵が10体出ていない時
+			// ーーーーーーーーーーーーーーーーーーーーーーーーー
+			if (m_spawnedEnemyCount < 2)
+			{
+				std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
+				enemy->Init();
+				enemy->SetOwner(this);
+				enemy->SetPos({ randomX, 500.0f, 0.0f });
+				enemy->SetAttackType(rand() % 2); // まっすぐか狙うかランダム
+				m_objList.push_back(enemy);
+
+				m_spawnedEnemyCount++; // ★敵を出したらカウントを1増やす！
+			}
+			// ーーーーーーーーーーーーーーーーーーーーーーーーー
+			// ★ フェーズ2：普通の敵が10体以上出た後（カオス状態）
+			// ーーーーーーーーーーーーーーーーーーーーーーーーー
+			else
+			{
+				int enemyChoice = rand() % 2; // 0か1をランダムで決める
+
+				if (enemyChoice == 0)
+				{
+					// 今までの敵を出す
+					std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
+					enemy->Init();
+					enemy->SetOwner(this);
+					enemy->SetPos({ randomX, 500.0f, 0.0f });
+					enemy->SetAttackType(rand() % 2);
+					m_objList.push_back(enemy);
+				}
+				else
+				{
+					// 新しい敵（SecondEnemy）を出す
+					std::shared_ptr<SecondEnemy> secondEnemy = std::make_shared<SecondEnemy>();
+					secondEnemy->Init();
+					secondEnemy->SetOwner(this);
+					secondEnemy->SetPos({ randomX, 500.0f, 0.0f });
+					m_objList.push_back(secondEnemy);
+				}
+			}
+
+			// 次の出現までの時間をセット
+			m_enemySpawnTimer = m_spawnInterval;
+
+			// ★少しずつ出現ペースを速くする（20フレーム間隔が限界）
+			if (m_spawnInterval > 20) {
+				m_spawnInterval -= 2;
+			}
+		}
 	}
 }
 

@@ -10,6 +10,7 @@ public:
 		Player,
 		Enemy,
 		Bullet,
+		EnemyBullet,
 		Life,
 		Shield,
 	};

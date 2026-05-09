@@ -61,4 +61,14 @@ private:
 	float m_spawnYMin = -500.0f;
 	float m_spawnYMax = 500.0f;
 	float firstspown = 0.0f;
+	
+	int m_gameTimer = 0;           // ゲーム開始からの合計時間
+	int m_enemySpawnTimer = 0;     // 敵を出すためのカウントダウン
+	int m_spawnInterval = 120;     // 敵を出す間隔（最初は2秒に1匹くらい）
+	const int START_DELAY = 300;   // 5秒間の猶予（60fps × 5秒 = 300）
+
+	int m_enemyCount = 0;          // 今までに出した普通の敵の数
+	int m_enemyTimer = 60;         // 普通の敵を出すタイマー
+	int m_secondEnemyTimer = 120;  // 新しい敵を出すタイマー
+	int m_spawnedEnemyCount=0;
 };

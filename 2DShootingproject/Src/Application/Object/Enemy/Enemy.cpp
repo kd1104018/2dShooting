@@ -1,5 +1,6 @@
 ﻿
 #include "Enemy.h"
+#include"../../Object/EnemyBullet/EnemyBullet.h"
 #include"../../Scene/GameScene/GameScene.h"
 
 
@@ -26,10 +27,24 @@ void Enemy::Init()
 	m_angle = 0.0f;    // 0度で初期化
 	m_aliveFlg = true;
 	m_objType = ObjectType::Enemy;		// 種類は「敵」
+	m_hp = 3;
+
 }
 void Enemy::OnHit()
 {
-	m_aliveFlg = false;	// 当たったときは生存フラグをfalseにする
+	
+	
+		m_hp--; // HPを1減らす
+
+		// ダメージを受けたら、少しの間（例：10フレーム）無敵にする
+		
+
+		// HPが0以下になったら消滅
+		if (m_hp <= 0)
+		{
+			m_aliveFlg = false;
+		}
+	
 }
 void Enemy::Release()
 {
@@ -38,8 +53,11 @@ void Enemy::Release()
 
 void Enemy::Update()
 {
+
+	
 	if (!m_aliveFlg) return;
 
+	
 	// 角度更新
 	m_angle += 5.0f;    // 5度ずつ回転
 
@@ -79,9 +97,46 @@ void Enemy::Update()
 			if (v.Length() < 64.0f)
 			{
 				obj->OnHit();	// 当たったときの処理
-				m_aliveFlg = false;	// 敵は当たったときに消える
+				OnHit();			// 敵に当たったときの処理
 
 			}
 		}
+	}
+
+	m_shotTimer--; // タイマーを減らす
+
+	if (m_shotTimer <= 0)
+	{
+		// 弾を作る
+		std::shared_ptr<EnemyBullet> bullet = std::make_shared<EnemyBullet>();
+		bullet->Init();
+		bullet->SetOwner(m_owner);
+		bullet->SetPos(m_pos); // 敵の位置から発射
+
+		if (m_attackType == 0) {
+			
+			bullet->SetMoveVec({ -20.0f, 0.0f, 0.0f });
+		}
+		else {
+			// 【タイプ1】プレイヤーを狙って撃つ
+			Math::Vector3 playerPos = m_pos;
+			// リストからプレイヤーを探す
+			for (auto& obj : m_owner->GetObjList()) {
+				if (obj->GetObjType() == ObjectType::Player) {
+					playerPos = obj->GetPos();
+					break;
+				}
+			}
+
+			// 敵からプレイヤーへの「向き（ベクトル）」を計算
+			Math::Vector3 dir = playerPos - m_pos;
+			if (dir.Length() > 0) {
+				dir.Normalize(); // 長さを「1」にする
+				bullet->SetMoveVec(dir * 5.0f); // 「向き × スピード(5.0f)」をセット！
+			}
+		}
+
+		m_owner->AddObject(bullet);
+		m_shotTimer = 120; // 再びタイマーをセット
 	}
 }

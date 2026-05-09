@@ -29,6 +29,11 @@ void Bullet::Init()
 	m_objType = ObjectType::Bullet;		// 種類は「弾」
 }
 
+void Bullet::OnHit()
+{
+	m_aliveFlg = false;	// 当たったときに消える
+}
+
 void Bullet::Release()
 {
 }
