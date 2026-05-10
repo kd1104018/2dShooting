@@ -15,10 +15,10 @@ void Bullet::Update()
 
 void Bullet::Draw()
 {
-	Math::Rectangle rc = { 0,0,37,13 };
+	Math::Rectangle rc = { 0,0,16,16 };
 
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-		&m_tex, m_pos.x, m_pos.y, 37, 13, &rc);
+		&m_tex, m_pos.x, m_pos.y, 32, 32, &rc);
 }
 
 void Bullet::Init()

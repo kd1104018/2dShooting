@@ -26,6 +26,9 @@ public:
 		m_objList.push_back(obj);
 	}
 	std::vector<std::shared_ptr<BaseObject>>m_objList;
+
+	void AddScore(int _value) { m_score += _value; }
+	unsigned long m_score = 0;
 private:
 
 	float m_alpha = 1.0f;
@@ -41,12 +44,12 @@ private:
 	// シールドを専用に保持（Player 追従用）
 	std::shared_ptr<Shield> m_shield = nullptr;
 
+	KdTexture m_shieldTex;
 
 
+	
+	
 
-	unsigned long score = 0;
-	static const int maxDigit = 10;
-	int digits[maxDigit] = {};
 	KdTexture m_lifeTex;
 	int m_lifeCount = 3;
 
@@ -71,4 +74,14 @@ private:
 	int m_enemyTimer = 60;         // 普通の敵を出すタイマー
 	int m_secondEnemyTimer = 120;  // 新しい敵を出すタイマー
 	int m_spawnedEnemyCount=0;
+	
+	
+	KdTexture m_numberTex;
+	static const int maxDigit = 8;
+	int digits[maxDigit] = {};
+
+
+	float m_bgX = 0.0f;
+	const float m_ScrollSpeed = 2.0f; // 背景のスクロール速度
+
 };

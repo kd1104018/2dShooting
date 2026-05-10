@@ -16,7 +16,7 @@ public:
 	void SetOwner(GameScene* owner) { m_owner = owner; }
 	void SetPos(Math::Vector3 pos) { m_pos = pos; }
 
-	// ★ここが重要：飛ぶ方向をセットする関数
+
 	void SetMoveVec(Math::Vector3 vec) { m_moveVec = vec; }
 
 private:

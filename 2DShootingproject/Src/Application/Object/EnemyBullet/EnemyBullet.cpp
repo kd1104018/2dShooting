@@ -14,17 +14,17 @@ void EnemyBullet::Update()
 
 void EnemyBullet::Draw()
 {
-	
-	Math::Rectangle rc = { 0, 0, 37,13 };
+
+	Math::Rectangle rc = { 0, 0, 16,16 };
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-		&m_tex, m_pos.x, m_pos.y, 37, 13, &rc);
+		&m_tex, m_pos.x, m_pos.y, 16, 16, &rc);
 }
 
 void EnemyBullet::Init()
 {
-	m_tex.Load("Texture/EnemyBullet.png"); // ★画像のパスに注意！
+	m_tex.Load("Texture/EnemyBullet.png"); //
 	m_pos = {};
-	m_moveVec = { 0.0f, -5.0f, 0.0f }; // デフォルトは下
+	m_moveVec = { 0.0f, -15.0f, 0.0f }; // デフォルトは下
 	m_aliveFlg = true;
 	m_objType = ObjectType::EnemyBullet; // 種類をセット
 }
@@ -34,4 +34,6 @@ void EnemyBullet::OnHit()
 	m_aliveFlg = false; // プレイヤーやバリアに当たったら消える
 }
 
-void EnemyBullet::Release() {}
+void EnemyBullet::Release()
+{
+}

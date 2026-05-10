@@ -18,15 +18,18 @@ public:
 	void SetOwner(GameScene* _owner) { m_owner = _owner; }
 
 	bool IsShieldActive() const { return m_shieldTime > 0; }
-
+	float GetShieldCD() const {
+		if (m_shieldCD <= 0) return 0.0f;
+		return (float)m_shieldCD / 600.0f; // 600は最大CDフレーム数
+	}
 private:
 
 	void Release()override;
 	
 	GameScene* m_owner = nullptr;	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを持っている
 	float m_shieldTime = 5.0f; // シールドの残り時間
-	float m_shieldCooldown = 0.0f; // シールドのクールダウン時間
+	
 	int m_shotTimer = 0; // 弾を撃つまでの待ち時間
 	float m_invincibleTimer = 0.0f;
-
+	float m_shieldCD = 0.0f; // シールドのクールダウン時間（フレーム数で管理）
 };

@@ -22,4 +22,7 @@ private:
 	float m_alphaadd = 0.01f;
 	KdTexture m_tex;
 	KdTexture m_starttex;
+	float m_btnalpha = 1.0f;
+	float m_btnscale = 1.0f;
+	float m_timer = 0.0f;
 };

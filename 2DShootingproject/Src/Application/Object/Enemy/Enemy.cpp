@@ -43,6 +43,7 @@ void Enemy::OnHit()
 		if (m_hp <= 0)
 		{
 			m_aliveFlg = false;
+			m_owner->m_score += 100;
 		}
 	
 }
@@ -94,7 +95,7 @@ void Enemy::Update()
 			Math::Vector3 v;
 			v = obj->GetPos() - m_pos;
 			//弾判定...ベクトルの長さで判定
-			if (v.Length() < 64.0f)
+			if (v.Length() < 48.0f)
 			{
 				obj->OnHit();	// 当たったときの処理
 				OnHit();			// 敵に当たったときの処理

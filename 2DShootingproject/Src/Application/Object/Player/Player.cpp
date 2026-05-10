@@ -8,10 +8,10 @@
 void Player::Update()
 {
 	// 移動
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) { m_pos.x -= 5; }
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { m_pos.x += 5; }
-	if (GetAsyncKeyState(VK_UP) & 0x8000) { m_pos.y += 5; }
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000) { m_pos.y -= 5; }
+	if (GetAsyncKeyState(VK_LEFT) & 0x8000) { m_pos.x -= 10; }
+	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { m_pos.x += 10; }
+	if (GetAsyncKeyState(VK_UP) & 0x8000) { m_pos.y += 10; }
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000) { m_pos.y -= 10; }
 
 	if (m_pos.x < -600.0f) { m_pos.x = -600.0f; } // 左端より左に行ったら、左端に戻す
 	if (m_pos.x > 600.0f) { m_pos.x = 600.0f; } // 右端より右に行ったら、右端に戻す
@@ -28,10 +28,10 @@ void Player::Update()
 	if (m_invincibleTimer > 0.0f) {
 		m_invincibleTimer -= 1.0f;
 	}
-	if (m_shieldCooldown > 0) {
-		m_shieldCooldown -= 1.0f;
+	if (m_shieldCD > 0) {
+		m_shieldCD -= 1.0f;
 	}
-	// ★追加：シールドの持続時間も毎フレーム減らす
+	
 	if (m_shieldTime > 0) {
 		m_shieldTime -= 1.0f;
 	}
@@ -43,19 +43,31 @@ void Player::Update()
 	{
 		if (obj->GetObjType() == ObjectType::Enemy || obj->GetObjType() == ObjectType::EnemyBullet)
 		{
+			// 無敵状態なら判定をスキップ
 			if (m_invincibleTimer > 0.0f || m_shieldTime > 0.0f) {
 				continue;
 			}
 
 			Math::Vector3 v = obj->GetPos() - m_pos;
-			if (v.Length() < 64.0f)
+			float distance = v.Length(); // 距離を計算
+
+			// --- 種類ごとに判定距離を決定 ---
+			float hitRange = 0.0f;
+			if (obj->GetObjType() == ObjectType::Enemy) {
+				hitRange = 64.0f; // 敵本体用
+			}
+			else {
+				hitRange = 16.0f; // 弾用
+			}
+
+			// ★ここを distance < hitRange だけにする（さっきの 64.0f の if は不要）
+			if (distance < hitRange)
 			{
 				obj->OnHit();
 
-				// ダメージを受けたので無敵時間をセット（例：2秒間 = 120フレーム）
 				m_invincibleTimer = 120.0f;
 
-				// HPを減らす処理
+				// HP（ライフUI）を減らす処理
 				for (auto& uiObj : m_owner->GetObjList()) {
 					if (uiObj->GetObjType() == ObjectType::Life) {
 						uiObj->OnHit();
@@ -69,15 +81,15 @@ void Player::Update()
 	// ----------------------------
 	// 3. シールド発動チェック
 	// ----------------------------
-	if ((GetAsyncKeyState('D') & 0x8000) != 0) {
-		// クールダウンが終了している、かつ現在シールドが出ていない場合
-		if (m_shieldCooldown <= 0.0f && m_shieldTime <= 0.0f) {
+	if (m_shieldCD > 0) {
+		m_shieldCD--;
+	}
 
-			// クールダウンと持続時間を設定
-			m_shieldCooldown = 900.0f; // 60fpsなら15秒
-			m_shieldTime = 300.0f;     // 60fpsなら5秒
-
-			// ※注意：ここで make_shared<Shield> をしていた処理は一旦消しています
+	// スペースキーなどでシールド発動！
+	if (GetAsyncKeyState('D') & 0x8000) { // 例：左クリ
+		if (m_shieldCD <= 0) {
+			m_shieldTime = 120.0f; // 3秒間発動
+			m_shieldCD = 720;      // 10秒間のクールタイム開始
 		}
 	}
 
@@ -129,12 +141,14 @@ void Player::Init()
 	m_aliveFlg = true;
 
 	// シールド関連の初期値
-	m_shieldCooldown = 0.0f;
+
 	m_shieldTime = 0.0f;
 
 	m_objType = ObjectType::Player;	// 種類は「プレイヤー」
 
 	m_invincibleTimer = 0.0f; // 無敵時間の初期値
+
+	m_shieldCD = 0.0f; // シールドのクールダウン初期値
 }
 
 void Player::Release()

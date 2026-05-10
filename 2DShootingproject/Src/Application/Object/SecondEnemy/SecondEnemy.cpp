@@ -5,6 +5,7 @@
 
 void SecondEnemy::Update()
 {
+
 	// ーーーーー 既存の移動処理 ーーーーー
 	m_pos.y -= 3.0f;
 	m_pos.x += std::sin(m_angle) * 5.0f;
@@ -27,7 +28,24 @@ void SecondEnemy::Update()
 		bullet->SetPos(m_pos); // 自分の位置から発射
 
 		// 弾の飛んでいく方向をセット（例：まっすぐ下に向かってスピード5.0fで飛ぶ）
-		bullet->SetMoveVec({ 0.0f, -5.0f, 0.0f });
+		
+			
+			Math::Vector3 playerPos = m_pos;
+			// リストからプレイヤーを探す
+			for (auto& obj : m_owner->GetObjList()) {
+				if (obj->GetObjType() == ObjectType::Player) {
+					playerPos = obj->GetPos();
+					break;
+				}
+			}
+
+			// 敵からプレイヤーへの「向き（ベクトル）」を計算
+			Math::Vector3 dir = playerPos - m_pos;
+			if (dir.Length() > 0) {
+				dir.Normalize(); // 長さを「1」にする
+				bullet->SetMoveVec(dir * 10.0f); // 「向き × スピード(5.0f)」をセット！
+			}
+		
 
 		// シーンに弾を追加
 		m_owner->AddObject(bullet);
@@ -35,8 +53,32 @@ void SecondEnemy::Update()
 		// 次に撃つまでの時間をセット（120フレーム＝2秒）
 		m_shotTimer = 120;
 	}
+	for (auto& obj : m_owner->GetObjList())
+	{
+		// 相手が「プレイヤーの弾」だった場合
+		if (obj->GetObjType() == BaseObject::ObjectType::Bullet)
+		{
+			// 自分(SecondEnemy)と弾の距離を計算
+			Math::Vector3 v = obj->GetPos() - m_pos;
+			float distance = v.Length();
 
-	if (m_pos.y < -500.0f) {
+			// 判定距離（自分32 + 弾8 くらいで 40.0f）
+			if (distance < 48.0f)
+			{
+				// 相手（弾）に当たった通知を送る
+				obj->OnHit();
+
+				// 自分も当たった処理（スコア加算して消える）を呼ぶ
+				this->OnHit();
+
+				// 1発当たれば十分なのでループを抜ける
+				break;
+			}
+		}
+	}
+
+	
+	if (m_pos.y < -400.0f) {
 		m_aliveFlg = false;
 	}
 }
@@ -65,6 +107,7 @@ void SecondEnemy::OnHit()
 {
 	// 弾やプレイヤーに当たったら消える
 	m_aliveFlg = false;
+	m_owner->m_score += 300;
 }
 
 void SecondEnemy::Release() {}

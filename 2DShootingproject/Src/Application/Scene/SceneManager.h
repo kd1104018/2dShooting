@@ -27,6 +27,8 @@ public:
 	{
 		return m_currentSceneType;
 	}
+	void SetFinalScore(unsigned long _score) { m_finalScore = _score; }
+	unsigned long GetFinalScore() const { return m_finalScore; }
 
 private:
 
@@ -41,6 +43,7 @@ private:
 
 	SceneType m_nextSceneType = m_currentSceneType;
 
+	unsigned long m_finalScore = 0;
 	
 
 	//シングルトンパターン
