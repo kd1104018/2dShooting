@@ -22,9 +22,15 @@ void TitleScene::Update()
 		m_alpha = 0.4f;
 		m_alphaadd *= -1;
 	}
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
-	{
-		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Game);
+	if (m_inputWaitTimer > 0) {
+		m_inputWaitTimer--;
+	}
+
+	// 2. タイマーが0のときだけ、ボタン判定を行う
+	if (m_inputWaitTimer <= 0) {
+		if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+			SceneManager::Instance().SetNextScene(SceneManager::SceneType::Game);
+		}
 	}
 
 	Math::Vector2 btnPos = { 0, -100 };
@@ -52,7 +58,7 @@ void TitleScene::Draw2D()
 		&m_starttex,
 		0, -100,                     // 位置
 		(int)(800 * m_btnscale),     // 幅（スケール適用）
-		(int)(1000 * m_btnscale),      // 高さ（スケール適用）
+		(int)(800 * m_btnscale),      // 高さ（スケール適用）
 		nullptr, &color);
 
 

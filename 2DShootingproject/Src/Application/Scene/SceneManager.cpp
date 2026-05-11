@@ -2,6 +2,7 @@
 #include"TitleScene/TitleScene.h"
 #include"GameScene/GameScene.h"
 #include"GameOverScene/GameOverScene.h"
+#include"GameClear/GameClear.h"
 
 void SceneManager::Update()
 {
@@ -45,6 +46,11 @@ void SceneManager::ChangeScene(SceneType _Scenetype)
 	case SceneType::GameOver:
 	{
 		m_CurrentScene = std::make_shared<GameOverScene>();
+		break;
+	}
+	case SceneType::GameClear:
+	{
+		m_CurrentScene = std::make_shared<GameClearScene>();
 		break;
 	}
 	}

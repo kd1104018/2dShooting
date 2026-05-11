@@ -82,6 +82,9 @@
     <Filter Include="Src\Application\Object\SecondEnemy">
       <UniqueIdentifier>{8294e952-180b-43eb-a9ec-3020840896ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Scene\GameClear">
+      <UniqueIdentifier>{052220d7-ead5-4de1-8dfe-617cfd89acc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -217,6 +220,9 @@
     <ClInclude Include="Src\Application\Object\SecondEnemy\SecondEnemy.h">
       <Filter>Src\Application\Object\SecondEnemy</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Scene\GameClear\GameClear.h">
+      <Filter>Src\Application\Scene\GameClear</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -320,6 +326,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\SecondEnemy\SecondEnemy.cpp">
       <Filter>Src\Application\Object\SecondEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\GameClear\GameClear.cpp">
+      <Filter>Src\Application\Scene\GameClear</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

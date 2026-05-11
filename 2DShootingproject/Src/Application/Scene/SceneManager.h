@@ -14,6 +14,7 @@ public:
 		Game,
 		GameOver,
 		Result,
+		GameClear,
 	};
 	
 	void Update();

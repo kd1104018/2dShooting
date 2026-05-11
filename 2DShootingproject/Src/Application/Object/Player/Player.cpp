@@ -43,8 +43,13 @@ void Player::Update()
 	{
 		if (obj->GetObjType() == ObjectType::Enemy || obj->GetObjType() == ObjectType::EnemyBullet)
 		{
+
 			// 無敵状態なら判定をスキップ
 			if (m_invincibleTimer > 0.0f || m_shieldTime > 0.0f) {
+				continue;
+			}
+			if(m_isInvincible==true)
+			{
 				continue;
 			}
 
@@ -88,8 +93,8 @@ void Player::Update()
 	// スペースキーなどでシールド発動！
 	if (GetAsyncKeyState('D') & 0x8000) { // 例：左クリ
 		if (m_shieldCD <= 0) {
-			m_shieldTime = 120.0f; // 3秒間発動
-			m_shieldCD = 720;      // 10秒間のクールタイム開始
+			m_shieldTime = 120.0f; // 2秒間発動
+			m_shieldCD = 720;      // 秒間のクールタイム開始
 		}
 	}
 
@@ -113,6 +118,14 @@ void Player::Update()
 			m_shotTimer = 10;
 		}
 	}
+	if (GetAsyncKeyState('L') & 0x8000) {
+		m_isInvincible = true;
+	}
+	else {
+		m_isInvincible = false;
+	}
+
+
 }
 void Player::Draw()
 {

@@ -16,7 +16,7 @@ public:
 	void OnHit()  override;
 	void SetPos(Math::Vector3 _pos) { m_pos = _pos; }
 
-
+	
 private:
 
 	void Release() override;

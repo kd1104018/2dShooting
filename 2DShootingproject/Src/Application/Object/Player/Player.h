@@ -22,6 +22,8 @@ public:
 		if (m_shieldCD <= 0) return 0.0f;
 		return (float)m_shieldCD / 600.0f; // 600は最大CDフレーム数
 	}
+	bool IsInvincible() const { return m_isInvincible; }
+
 private:
 
 	void Release()override;
@@ -32,4 +34,5 @@ private:
 	int m_shotTimer = 0; // 弾を撃つまでの待ち時間
 	float m_invincibleTimer = 0.0f;
 	float m_shieldCD = 0.0f; // シールドのクールダウン時間（フレーム数で管理）
+	bool m_isInvincible = false;
 };

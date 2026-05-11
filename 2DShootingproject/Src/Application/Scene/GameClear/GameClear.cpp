@@ -1,15 +1,15 @@
-#include "GameOverScene.h"
+#include "GameClear.h"
 #include "../SceneManager.h"
 
-void GameOverScene::Init()
+void GameClearScene::Init()
 {
-	m_tex.Load("Texture/Gameover.png");
+	m_tex.Load("Texture/Gameclear.png");
 	m_cntnewtex.Load("Texture/cntnew.png");
 	m_numberTex.Load("Texture/sucore.png");
 
 }
 
-void GameOverScene::Update()
+void GameClearScene::Update()
 {
 	/*if(GetAsyncKeyState(VK_CLEAR))*/
 	m_alpha += m_alphaadd;
@@ -36,7 +36,7 @@ void GameOverScene::Update()
 	m_timer++;
 }
 
-void GameOverScene::Draw2D()
+void GameClearScene::Draw2D()
 {
 
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(&m_tex, Math::Rectangle{ 0,0,1280,720 });
@@ -86,6 +86,6 @@ void GameOverScene::Draw2D()
 
 }
 
-void GameOverScene::Release()
+void GameClearScene::Release()
 {
 }
