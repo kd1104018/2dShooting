@@ -1,6 +1,7 @@
 ﻿#include "SecondEnemy.h"
 #include "../../Scene/GameScene/GameScene.h"
 #include"../../Object/EnemyBullet/EnemyBullet.h"
+#include"../../Object/Explosion/Explosion.h"
 #include <cmath> // ★追加：sin関数を使うため
 
 void SecondEnemy::Update()
@@ -108,6 +109,18 @@ void SecondEnemy::OnHit()
 	// 弾やプレイヤーに当たったら消える
 	m_aliveFlg = false;
 	m_owner->m_score += 300;
+	if (m_owner) {
+		auto exp = std::make_shared<Explosion>();
+		exp->Init();
+		exp->SetPos(m_pos); // 敵がいた場所にセット
+
+		// GameSceneのオブジェクトリストに追加してもらう
+		// (GameSceneにAddObjectのような関数を作っておくと楽です)
+		m_owner->AddObject(exp);
+
+		// スコア加算も忘れずに
+		m_owner->AddScore(100);
+	}
 }
 
 void SecondEnemy::Release() {}

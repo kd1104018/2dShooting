@@ -58,7 +58,7 @@ void TitleScene::Draw2D()
 		&m_starttex,
 		0, -100,                     // 位置
 		(int)(800 * m_btnscale),     // 幅（スケール適用）
-		(int)(800 * m_btnscale),      // 高さ（スケール適用）
+		(int)(400 * m_btnscale),      // 高さ（スケール適用）
 		nullptr, &color);
 
 

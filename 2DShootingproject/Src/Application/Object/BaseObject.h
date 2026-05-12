@@ -13,6 +13,7 @@ public:
 		EnemyBullet,
 		Life,
 		Shield,
+		Explosion,
 	};
 
 	BaseObject() {}
@@ -25,6 +26,9 @@ public:
 	ObjectType GetObjType() { return m_objType; }
 	Math::Vector3 GetPos() { return m_pos; }
 	bool GetAliveFlg() { return m_aliveFlg; }
+
+	//セットポス
+	void SetPos(Math::Vector3 _pos) { m_pos = _pos; }
 
 	// protected : このクラスと派生先のクラス内からのみアクセス可能
 protected:

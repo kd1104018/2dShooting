@@ -2,6 +2,7 @@
 #include "Enemy.h"
 #include"../../Object/EnemyBullet/EnemyBullet.h"
 #include"../../Scene/GameScene/GameScene.h"
+#include"../../Object/Explosion/Explosion.h"
 
 
 void Enemy::Draw()
@@ -44,6 +45,19 @@ void Enemy::OnHit()
 		{
 			m_aliveFlg = false;
 			m_owner->m_score += 100;
+
+			if (m_owner) {
+				auto exp = std::make_shared<Explosion>();
+				exp->Init();
+				exp->SetPos(m_pos); // 敵がいた場所にセット
+
+				// GameSceneのオブジェクトリストに追加してもらう
+				// (GameSceneにAddObjectのような関数を作っておくと楽です)
+				m_owner->AddObject(exp);
+
+				// スコア加算も忘れずに
+				m_owner->AddScore(100);
+			}
 		}
 	
 }
