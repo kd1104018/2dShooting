@@ -3,6 +3,7 @@
 #include"GameScene/GameScene.h"
 #include"GameOverScene/GameOverScene.h"
 #include"GameClear/GameClear.h"
+#include"BossScene/BossScene.h"
 
 void SceneManager::Update()
 {
@@ -51,6 +52,11 @@ void SceneManager::ChangeScene(SceneType _Scenetype)
 	case SceneType::GameClear:
 	{
 		m_CurrentScene = std::make_shared<GameClearScene>();
+		break;
+	}
+	case SceneType::Boss:
+	{
+		m_CurrentScene = std::make_shared<BossScene>();
 		break;
 	}
 	}

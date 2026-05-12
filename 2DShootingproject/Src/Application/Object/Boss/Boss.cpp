@@ -1,11 +1,11 @@
 ﻿
-#include "Enemy.h"
+#include "Boss.h"
 #include"../../Object/EnemyBullet/EnemyBullet.h"
 #include"../../Scene/GameScene/GameScene.h"
 #include"../../Object/Explosion/Explosion.h"
 
 
-void Enemy::Draw()
+void Boss::Draw()
 {
 	if (!m_aliveFlg) return;
 
@@ -21,17 +21,17 @@ void Enemy::Draw()
 }
 
 
-void Enemy::Init()
+void Boss::Init()
 {
 	m_tex.Load("Texture/enemy.png");
 	m_pos = { 640,0 };
 	m_angle = 0.0f;    // 0度で初期化
 	m_aliveFlg = true;
-	m_objType = ObjectType::Enemy;		// 種類は「敵」
+	m_objType = ObjectType::Boss;		// 種類は「敵」
 	m_hp = 3;
 
 }
-void Enemy::OnHit()
+void Boss::OnHit()
 {
 	
 	
@@ -61,12 +61,12 @@ void Enemy::OnHit()
 		}
 	
 }
-void Enemy::Release()
+void Boss::Release()
 {
 	// テクスチャはkdTexture型のデストラクタでじどうでReleaseされるのでしなくてもよい
 }
 
-void Enemy::Update()
+void Boss::Update()
 {
 
 	

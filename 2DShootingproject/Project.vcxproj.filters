@@ -88,6 +88,12 @@
     <Filter Include="Src\Application\Object\Explosion">
       <UniqueIdentifier>{32d17a90-f690-4a57-8c33-10bfbeab7eef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Scene\BossScene">
+      <UniqueIdentifier>{6d4ae775-dfe5-46ad-b545-edadd4a51ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Boss">
+      <UniqueIdentifier>{a12fac8b-2e11-4ad9-9cef-b17a2f44c7a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -229,6 +235,12 @@
     <ClInclude Include="Src\Application\Object\Explosion\Explosion.h">
       <Filter>Src\Application\Object\Explosion</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Scene\BossScene\BossScene.h">
+      <Filter>Src\Application\Scene\BossScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Boss\Boss.h">
+      <Filter>Src\Application\Object\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -338,6 +350,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Explosion\Explosion.cpp">
       <Filter>Src\Application\Object\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Scene\BossScene\BossScene.cpp">
+      <Filter>Src\Application\Scene\BossScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Boss\Boss.cpp">
+      <Filter>Src\Application\Object\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@ public:
 		GameOver,
 		Result,
 		GameClear,
+		Boss,
 	};
 	
 	void Update();

@@ -4,12 +4,12 @@
 class BaseObject;
 class Shield; // 追加：前方宣言
 
-class GameScene : public BaseScene
+class BossScene : public BaseScene
 {
 public:
 
-	GameScene() { Init(); }
-	~GameScene() {}
+	BossScene() { Init(); }
+	~BossScene() {}
 
 	//オーバーライドは基底クラスの関数を上書きする
 	void Init()override;

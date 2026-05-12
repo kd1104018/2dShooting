@@ -6,11 +6,11 @@
 #include "../BaseObject.h"
 class GameScene;
 
-class Enemy : public BaseObject
+class Boss : public BaseObject
 {
 public:
-	Enemy() { Init(); }
-	~Enemy() override { Release(); }
+	Boss() { Init(); }
+	~Boss() override { Release(); }
 
 	void Update()override;
 	void Draw()override;

@@ -209,7 +209,7 @@ void GameScene::Update()
 	//クリアー条件スコア5000点
 	if (m_score >= 5000) {
 		SceneManager::Instance().SetFinalScore(m_score);
-		SceneManager::Instance().SetNextScene(SceneManager::SceneType::GameClear);
+		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Boss);
 		return;
 
 	}
