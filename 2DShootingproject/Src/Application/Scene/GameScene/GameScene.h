@@ -3,7 +3,7 @@
 #include "../BaseScene/BaseScene.h"
 class BaseObject;
 class Shield; // 追加：前方宣言
-
+class Bosss;
 class GameScene : public BaseScene
 {
 public:
@@ -29,6 +29,8 @@ public:
 
 	void AddScore(int _value) { m_score += _value; }
 	unsigned long m_score = 0;
+
+	const std::shared_ptr<BaseObject>& GetPlayer() const { return m_player; }
 private:
 
 	float m_alpha = 1.0f;
@@ -80,6 +82,8 @@ private:
 	static const int maxDigit = 8;
 	int digits[maxDigit] = {};
 
+	bool m_isBossMode = false;              // ★ ボス戦中かどうかのフラグ
+	std::shared_ptr<BaseObject> m_boss = nullptr;
 
 	float m_bgX = 0.0f;
 	const float m_ScrollSpeed = 2.0f; // 背景のスクロール速度

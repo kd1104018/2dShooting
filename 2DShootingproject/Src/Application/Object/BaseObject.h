@@ -10,11 +10,13 @@ public:
 		Player,
 		Enemy,
 		Bullet,
+		SecondEnemy,
 		EnemyBullet,
 		Life,
 		Shield,
 		Explosion,
 		Boss,
+		BossBullet,
 	};
 
 	BaseObject() {}
@@ -31,6 +33,8 @@ public:
 	//セットポス
 	void SetPos(Math::Vector3 _pos) { m_pos = _pos; }
 
+	bool GetAliveFlg() const { return m_aliveFlg; }
+	void SetAliveFlg(bool _flag) { m_aliveFlg = _flag; }
 	// protected : このクラスと派生先のクラス内からのみアクセス可能
 protected:
 

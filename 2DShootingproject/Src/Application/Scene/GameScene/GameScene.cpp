@@ -6,6 +6,8 @@
 #include "../../Object/Life/Life.h"
 #include "../../Object/Shield/Shield.h"
 #include "../../Object/SecondEnemy/SecondEnemy.h"
+#include "../../Object/Boss/Boss.h"
+#include "../../Object/BossBullet/BossBullet.h"
 #include <random>
 
 
@@ -31,8 +33,7 @@ void GameScene::Init()
 
 	std::random_device rd;
 	std::mt19937 mt(rd());
-	// 画面幅／高さに合わせて範囲を調整してください
-	// 敵は画面の右端からスタートさせたいので X は固定値にする
+	
 	const float screenRightX = 600.0f; // 画面右端の X 座標（必要に応じて変更）
 	std::uniform_real_distribution<float> distY(-500.0f, 500.0f); // Y 範囲
 
@@ -135,63 +136,67 @@ void GameScene::Update()
 	m_gameTimer++; // 毎フレーム時間を加算
 
 	// 300フレーム（約5秒）経過してから敵を出し始める
-	if (m_gameTimer > 300)
+	if (!m_isBossMode && m_gameTimer > 300)
 	{
 		m_enemySpawnTimer--;
-
 		if (m_enemySpawnTimer <= 0)
 		{
-			// 上から降らせる設定（X座標はランダム）
-			float randomX = (float)(rand() % 1000 - 500);
+			m_enemySpawnTimer--;
 
-			// ーーーーーーーーーーーーーーーーーーーーーーーーー
-			// ★ フェーズ1：まだ普通の敵が10体出ていない時
-			// ーーーーーーーーーーーーーーーーーーーーーーーーー
-			if (m_spawnedEnemyCount < 2)
+			if (m_enemySpawnTimer <= 0)
 			{
-				std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
-				enemy->Init();
-				enemy->SetOwner(this);
-				enemy->SetPos({ randomX, 500.0f, 0.0f });
-				enemy->SetAttackType(rand() % 2); // まっすぐか狙うかランダム
-				m_objList.push_back(enemy);
+				// 上から降らせる設定（X座標はランダム）
+				float randomX = (float)(rand() % 1000 - 500);
 
-				m_spawnedEnemyCount++; // ★敵を出したらカウントを1増やす！
-			}
-			// ーーーーーーーーーーーーーーーーーーーーーーーーー
-			//  フェーズ2：普通の敵が10体以上出た後
-			// ーーーーーーーーーーーーーーーーーーーーーーーーー
-			else
-			{
-				int enemyChoice = rand() % 2; // 0か1をランダムで決める
-
-				if (enemyChoice == 0)
+				// ーーーーーーーーーーーーーーーーーーーーーーーーー
+				// ★ フェーズ1：まだ普通の敵が10体出ていない時
+				// ーーーーーーーーーーーーーーーーーーーーーーーーー
+				if (m_spawnedEnemyCount < 2)
 				{
-					// 今までの敵を出す
 					std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
 					enemy->Init();
 					enemy->SetOwner(this);
 					enemy->SetPos({ randomX, 500.0f, 0.0f });
-					enemy->SetAttackType(rand() % 2);
+					enemy->SetAttackType(rand() % 2); // まっすぐか狙うかランダム
 					m_objList.push_back(enemy);
+
+					m_spawnedEnemyCount++; // ★敵を出したらカウントを1増やす！
 				}
+				// ーーーーーーーーーーーーーーーーーーーーーーーーー
+				//  フェーズ2：普通の敵が10体以上出た後
+				// ーーーーーーーーーーーーーーーーーーーーーーーーー
 				else
 				{
-					// 新しい敵（SecondEnemy）を出す
-					std::shared_ptr<SecondEnemy> secondEnemy = std::make_shared<SecondEnemy>();
-					secondEnemy->Init();
-					secondEnemy->SetOwner(this);
-					secondEnemy->SetPos({ randomX, 500.0f, 0.0f });
-					m_objList.push_back(secondEnemy);
+					int enemyChoice = rand() % 2; // 0か1をランダムで決める
+
+					if (enemyChoice == 0)
+					{
+						// 今までの敵を出す
+						std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
+						enemy->Init();
+						enemy->SetOwner(this);
+						enemy->SetPos({ randomX, 500.0f, 0.0f });
+						enemy->SetAttackType(rand() % 2);
+						m_objList.push_back(enemy);
+					}
+					else
+					{
+						// 新しい敵（SecondEnemy）を出す
+						std::shared_ptr<SecondEnemy> secondEnemy = std::make_shared<SecondEnemy>();
+						secondEnemy->Init();
+						secondEnemy->SetOwner(this);
+						secondEnemy->SetPos({ randomX, 500.0f, 0.0f });
+						m_objList.push_back(secondEnemy);
+					}
 				}
-			}
 
-			// 次の出現までの時間をセット
-			m_enemySpawnTimer = m_spawnInterval;
+				// 次の出現までの時間をセット
+				m_enemySpawnTimer = m_spawnInterval;
 
-			// ★少しずつ出現ペースを速くする（20フレーム間隔が限界）
-			if (m_spawnInterval > 30) {
-				m_spawnInterval -= 2;
+				// ★少しずつ出現ペースを速くする（20フレーム間隔が限界）
+				if (m_spawnInterval > 30) {
+					m_spawnInterval -= 2;
+				}
 			}
 		}
 	}
@@ -207,13 +212,43 @@ void GameScene::Update()
 		return;
 	}
 	//クリアー条件スコア5000点
-	if (m_score >= 5000) {
-		SceneManager::Instance().SetFinalScore(m_score);
-		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Boss);
-		return;
 
+	if (!m_isBossMode && m_score >= 5000) {
+		m_isBossMode = true;
+
+		
+		for (const auto& obj : m_objList) {
+			if (obj->GetObjType() == BaseObject::ObjectType::Enemy ||
+				obj->GetObjType() == BaseObject::ObjectType::SecondEnemy) {
+					obj->OnHit(); // 敵オブジェクトの OnHit を呼び出して爆破させる
+			}
+		}
+
+		
+
+		// 3. ボス登場！
+		std::shared_ptr<Boss> boss;
+		boss = std::make_shared<Boss>();
+		boss->Init();
+		boss->SetOwner(this);
+		boss->SetPos({ 800.0f, 0.0f, 0.0f }); // 右からゆっくり登場
+		m_objList.push_back(boss);
+
+
+
+
+
+
+
+
+		// 5. ボスが倒されたらクリア画面へ
+		if (m_isBossMode && m_boss && !m_boss->GetAliveFlg()) {
+			SceneManager::Instance().SetFinalScore(m_score);
+			SceneManager::Instance().SetNextScene(SceneManager::SceneType::GameClear);
+		}
 	}
 }
+
 
 void GameScene::Draw2D()
 {

@@ -54,11 +54,7 @@ void SceneManager::ChangeScene(SceneType _Scenetype)
 		m_CurrentScene = std::make_shared<GameClearScene>();
 		break;
 	}
-	case SceneType::Boss:
-	{
-		m_CurrentScene = std::make_shared<BossScene>();
-		break;
-	}
+	
 	}
 	//2 シーン管理を更新
 	m_currentSceneType = _Scenetype;

@@ -41,7 +41,7 @@ void Player::Update()
 	// ----------------------------
 	for (auto& obj : m_owner->GetObjList())
 	{
-		if (obj->GetObjType() == ObjectType::Enemy || obj->GetObjType() == ObjectType::EnemyBullet)
+		if (obj->GetObjType() == ObjectType::Enemy || obj->GetObjType() == ObjectType::EnemyBullet||obj->GetObjType()==ObjectType::BossBullet)
 		{
 
 			// 無敵状態なら判定をスキップ
@@ -81,6 +81,7 @@ void Player::Update()
 				}
 			}
 		}
+
 	}
 
 	// ----------------------------

@@ -1,6 +1,6 @@
 ﻿
 #include "Boss.h"
-#include"../../Object/EnemyBullet/EnemyBullet.h"
+#include"../../Object/BossBullet/BossBullet.h"
 #include"../../Scene/GameScene/GameScene.h"
 #include"../../Object/Explosion/Explosion.h"
 
@@ -9,27 +9,37 @@ void Boss::Draw()
 {
 	if (!m_aliveFlg) return;
 
-	Math::Rectangle rc = { 0, 0, 64, 64, };
+	// 現在のコマに応じた切り取り範囲（Rectangle）を計算
+	Math::Rectangle rc = {
+		m_animeIdx * CHIP_W,   // 切り取り開始X
+		m_currentLine * CHIP_H, // 切り取り開始Y
+		CHIP_W,               // 切り取り幅
+		CHIP_H                // 切り取り高さ
+	};
 
-	// 第7引数に m_angle を追加
+	// 描画（少し大きく見せる）
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-
-		&m_tex, m_pos.x, m_pos.y, 64, 64, &rc);
-
-	// テクスチャ,X座標,Y座標,幅,高さ,切り取り範囲
+		&m_boss,
+		(int)m_pos.x, (int)m_pos.y,
+		300, 300,  // 表示サイズ
+		&rc        // 切り取り範囲
+	);
 
 }
 
 
-void Boss::Init()
+void Boss::Init() 
 {
-	m_tex.Load("Texture/enemy.png");
-	m_pos = { 640,0 };
-	m_angle = 0.0f;    // 0度で初期化
+	m_boss.Load("Texture/Boss.png");
+	m_pos = { 300.0f, 0.0f, 0.0f }; // 最初は画面のさらに右に配置
 	m_aliveFlg = true;
-	m_objType = ObjectType::Boss;		// 種類は「敵」
-	m_hp = 3;
+	m_hp = 20; // ボスのHPを設定
 
+	m_animeCount = 0;
+	m_animeIdx = 0;
+	m_maxAnime = 10;   // 1行目のコマ数
+	m_animeSpeed = 6;   // アニメーション速度
+	m_currentLine = 0;
 }
 void Boss::OnHit()
 {
@@ -44,7 +54,7 @@ void Boss::OnHit()
 		if (m_hp <= 0)
 		{
 			m_aliveFlg = false;
-			m_owner->m_score += 100;
+			
 
 			if (m_owner) {
 				auto exp = std::make_shared<Explosion>();
@@ -56,7 +66,7 @@ void Boss::OnHit()
 				m_owner->AddObject(exp);
 
 				// スコア加算も忘れずに
-				m_owner->AddScore(100);
+				
 			}
 		}
 	
@@ -68,90 +78,108 @@ void Boss::Release()
 
 void Boss::Update()
 {
+	m_animeCount++;
+	if (m_animeCount >= m_animeSpeed) {
+		m_animeCount = 0;
+		m_animeIdx++;
 
-	
-	if (!m_aliveFlg) return;
-
-	
-	// 角度更新
-	m_angle += 5.0f;    // 5度ずつ回転
-
-	// X移動（ラップ）
-	if (-640 - 36 > m_pos.x)
-	{
-		m_pos.x = 640 + 32;
-	}
-	else
-	{
-		m_pos.x -= 10.0f;
-	}
-
-	// Y上下運動（メンバ変数 m_moveY を使って状態を保持）
-	m_pos.y += m_moveY;
-
-	// 範囲を超えたら方向を反転
-	if (m_pos.y > 300.0f)
-	{
-		m_moveY = -std::abs(m_moveY);
-	}
-	else if (m_pos.y < -300.0f)
-	{
-		m_moveY = std::abs(m_moveY);
-	}
-	for (auto& obj : m_owner->GetObjList())
-	{
-
-		// オブジェクトに対する処理
-		if (obj->GetObjType() == ObjectType::Bullet)
-		{
-
-			// 対象の座標（ベクトル） - 自分の座標（ベクトル） = 対象へのベクトル（矢印）
-			Math::Vector3 v;
-			v = obj->GetPos() - m_pos;
-			//弾判定...ベクトルの長さで判定
-			if (v.Length() < 48.0f)
-			{
-				obj->OnHit();	// 当たったときの処理
-				OnHit();			// 敵に当たったときの処理
-
-			}
+		// ループ再生
+		if (m_animeIdx >= m_maxAnime) {
+			m_animeIdx = 0;
 		}
 	}
 
-	m_shotTimer--; // タイマーを減らす
+	// 1. 登場シーン（ゆっくり左へ移動して定位置へ）
+	if (m_pos.x > 300.0f) {
+		m_pos.x -= 2.0f;
+		return;
+	}
 
-	if (m_shotTimer <= 0)
+	if (m_attackTimer <= 0)
 	{
-		// 弾を作る
-		std::shared_ptr<EnemyBullet> bullet = std::make_shared<EnemyBullet>();
-		bullet->Init();
-		bullet->SetOwner(m_owner);
-		bullet->SetPos(m_pos); // 敵の位置から発射
+		// 弾を生成
+		Shoot();
 
-		if (m_attackType == 0) {
-			
-			bullet->SetMoveVec({ -20.0f, 0.0f, 0.0f });
+		// 次の攻撃までの待ち時間（120フレーム = 2秒に1回）
+		m_attackTimer = 120;
+	}
+
+	m_attackTimer--;
+
+	if (m_attackTimer <= 0) {
+		// 次の攻撃をランダムまたは順番で決める
+		m_attackPhase = (rand() % 2) + 1;
+
+		if (m_attackPhase == 1) {
+			m_shotCount = 0;       // 連射カウントリセット
+			m_attackTimer = 180;   // 3秒間(180F)の攻撃時間を確保
 		}
 		else {
-			// 【タイプ1】プレイヤーを狙って撃つ
-			Math::Vector3 playerPos = m_pos;
-			// リストからプレイヤーを探す
-			for (auto& obj : m_owner->GetObjList()) {
-				if (obj->GetObjType() == ObjectType::Player) {
-					playerPos = obj->GetPos();
-					break;
-				}
-			}
-
-			// 敵からプレイヤーへの「向き（ベクトル）」を計算
-			Math::Vector3 dir = playerPos - m_pos;
-			if (dir.Length() > 0) {
-				dir.Normalize(); // 長さを「1」にする
-				bullet->SetMoveVec(dir * 5.0f); // 「向き × スピード(5.0f)」をセット！
-			}
+			ShootSpread();         // 拡散弾は一瞬で撃つ
+			m_attackTimer = 120;   // 撃った後の硬直時間
 		}
+	}
+
+	// --- 連射攻撃(Phase 1)の実行中処理 ---
+	if (m_attackPhase == 1 && m_attackTimer > 0) {
+		m_shotInterval--;
+		if (m_shotInterval <= 0) {
+			ShootTarget();         // 自機を狙う弾
+			m_shotInterval = 10;   // 10フレームに1発（秒間6発）
+			m_shotCount++;
+		}
+	}
+
+}
+void Boss::Shoot()
+{
+	if (!m_owner) return;
+
+	// 敵の弾（EnemyBullet）を作成
+	std::shared_ptr<BossBullet> bullet = std::make_shared<BossBullet>();
+	bullet->Init();
+	
+	// ボスの現在地から発射
+	bullet->SetPos(m_pos);
+	
+	// GameSceneのリストに追加
+	m_owner->AddObject(bullet);
+}
+void Boss::ShootTarget() {
+	if (!m_owner || !m_owner->GetPlayer()) return;
+
+	auto bullet = std::make_shared<BossBullet>();
+	bullet->Init();
+	bullet->SetPos(m_pos);
+
+	// 自機への方向ベクトルを計算
+	Math::Vector3 targetPos = m_owner->GetPlayer()->GetPos();
+	Math::Vector3 dir = targetPos - m_pos;
+	dir.Normalize(); // 長さを1にする
+
+	// 弾に方向をセット（EnemyBullet側にSetDir関数などを作っておく）
+	bullet->SetDir(dir);
+	bullet->SetSpeed(8.0f); // 少し速め
+
+	m_owner->AddObject(bullet);
+}
+void Boss::ShootSpread() {
+	if (!m_owner) return;
+
+	// 5方向くらいに広げる
+	for (int i = -2; i <= 2; i++) {
+		auto bullet = std::make_shared<BossBullet>();
+		bullet->Init();
+		bullet->SetPos(m_pos);
+
+		// 基本は左方向（-1, 0, 0）
+		// yに少し変化をつけて拡散させる
+		Math::Vector3 dir = { -1.0f, i * 0.2f, 0.0f };
+		dir.Normalize();
+
+		bullet->SetDir(dir);
+		bullet->SetSpeed(5.0f); // 拡散弾は避けやすいように少し遅め
 
 		m_owner->AddObject(bullet);
-		m_shotTimer = 120; // 再びタイマーをセット
 	}
 }
