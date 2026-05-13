@@ -4,7 +4,7 @@
 void BossBullet::Update()
 {
 	
-	//m_pos += m_moveVec;
+	
 	m_pos += m_dir * m_speed; // 方向ベクトルに速度を掛けて移動量を計算し、位置に加算
 
 	// 画面外に出たら消える
@@ -18,7 +18,7 @@ void BossBullet::Draw()
 
 	Math::Rectangle rc = { 0, 0, 16,16 };
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-		&m_tex, m_pos.x, m_pos.y, 16, 16, &rc);
+		&m_tex, m_pos.x, m_pos.y, 36, 36, &rc);
 }
 
 void BossBullet::Init()

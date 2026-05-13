@@ -9,10 +9,10 @@ void Life::Update()
 
 void Life::Draw()
 {
-	Math::Rectangle rc = { 0,0,32,32 };
+	Math::Rectangle rc = { 0,0,29,16 };
 
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-		&m_tex, m_pos.x, m_pos.y, 32, 32, &rc);
+		&m_tex, m_pos.x, m_pos.y, 40, 32, &rc);
 }
 
 void Life::Init()

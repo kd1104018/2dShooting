@@ -101,13 +101,13 @@ void Boss::Update()
 		Shoot();
 
 		// 次の攻撃までの待ち時間（120フレーム = 2秒に1回）
-		m_attackTimer = 120;
+		m_attackTimer = 90;
 	}
 
 	m_attackTimer--;
 
 	if (m_attackTimer <= 0) {
-		// 次の攻撃をランダムまたは順番で決める
+		
 		m_attackPhase = (rand() % 2) + 1;
 
 		if (m_attackPhase == 1) {
@@ -129,7 +129,25 @@ void Boss::Update()
 			m_shotCount++;
 		}
 	}
+	for (auto& obj : m_owner->GetObjList())
+	{
 
+		// オブジェクトに対する処理
+		if (obj->GetObjType() == ObjectType::Bullet)
+		{
+
+			// 対象の座標（ベクトル） - 自分の座標（ベクトル） = 対象へのベクトル（矢印）
+			Math::Vector3 v;
+			v = obj->GetPos() - m_pos;
+			//弾判定...ベクトルの長さで判定
+			if (v.Length() < 60.0f)
+			{
+				obj->OnHit();	// 当たったときの処理
+				OnHit();			// 敵に当たったときの処理
+
+			}
+		}
+	}
 }
 void Boss::Shoot()
 {

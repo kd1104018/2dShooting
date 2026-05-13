@@ -22,6 +22,7 @@ public:
 	void SetMoveY(float v) { m_moveY = v; }
 	
 	void SetAttackType(int type) { m_attackType = type; }
+	
 private:
 
 	void Release()override;
@@ -30,10 +31,10 @@ private:
 	float m_moveY = 5.0f;
 	GameScene* m_owner = nullptr;	// プレイヤーはゲームシーンに所属しているので、ゲームシーンのポインタを持っている
 	
-	int m_shotTimer = 120; // 撃つまでの時間
+	int m_shotTimer = 60; // 撃つまでの時間
 	int m_attackType = 0;  // 0なら「まっすぐ」、1なら「狙う」
 
-	int m_hp = 2; 
+	int m_hp = 1; 
 
 
 };

@@ -28,7 +28,7 @@ void Enemy::Init()
 	m_angle = 0.0f;    // 0度で初期化
 	m_aliveFlg = true;
 	m_objType = ObjectType::Enemy;		// 種類は「敵」
-	m_hp = 3;
+	m_hp = 1;
 
 }
 void Enemy::OnHit()
@@ -51,8 +51,7 @@ void Enemy::OnHit()
 				exp->Init();
 				exp->SetPos(m_pos); // 敵がいた場所にセット
 
-				// GameSceneのオブジェクトリストに追加してもらう
-				// (GameSceneにAddObjectのような関数を作っておくと楽です)
+				
 				m_owner->AddObject(exp);
 
 				// スコア加算も忘れずに
@@ -61,6 +60,7 @@ void Enemy::OnHit()
 		}
 	
 }
+
 void Enemy::Release()
 {
 	// テクスチャはkdTexture型のデストラクタでじどうでReleaseされるのでしなくてもよい
@@ -73,9 +73,8 @@ void Enemy::Update()
 	if (!m_aliveFlg) return;
 
 	
-	// 角度更新
-	m_angle += 5.0f;    // 5度ずつ回転
-
+	
+	
 	// X移動（ラップ）
 	if (-640 - 36 > m_pos.x)
 	{
@@ -86,7 +85,7 @@ void Enemy::Update()
 		m_pos.x -= 10.0f;
 	}
 
-	// Y上下運動（メンバ変数 m_moveY を使って状態を保持）
+	
 	m_pos.y += m_moveY;
 
 	// 範囲を超えたら方向を反転
@@ -122,20 +121,19 @@ void Enemy::Update()
 
 	if (m_shotTimer <= 0)
 	{
-		// 弾を作る
 		std::shared_ptr<EnemyBullet> bullet = std::make_shared<EnemyBullet>();
 		bullet->Init();
 		bullet->SetOwner(m_owner);
-		bullet->SetPos(m_pos); // 敵の位置から発射
+		bullet->SetPos(m_pos);
 
 		if (m_attackType == 0) {
 			
-			bullet->SetMoveVec({ -20.0f, 0.0f, 0.0f });
+			bullet->SetDir({ -3.0f, 0.0f, 0.0f });
+			bullet->SetSpeed(5.0f);
 		}
 		else {
 			// 【タイプ1】プレイヤーを狙って撃つ
 			Math::Vector3 playerPos = m_pos;
-			// リストからプレイヤーを探す
 			for (auto& obj : m_owner->GetObjList()) {
 				if (obj->GetObjType() == ObjectType::Player) {
 					playerPos = obj->GetPos();
@@ -143,15 +141,17 @@ void Enemy::Update()
 				}
 			}
 
-			// 敵からプレイヤーへの「向き（ベクトル）」を計算
 			Math::Vector3 dir = playerPos - m_pos;
 			if (dir.Length() > 0) {
-				dir.Normalize(); // 長さを「1」にする
-				bullet->SetMoveVec(dir * 5.0f); // 「向き × スピード(5.0f)」をセット！
+				dir.Normalize();
+
+				
+				bullet->SetDir(dir);      // 向きをセット
+				bullet->SetSpeed(10.0f);   // スピードをセット
 			}
 		}
 
 		m_owner->AddObject(bullet);
-		m_shotTimer = 120; // 再びタイマーをセット
+		m_shotTimer = 120;
 	}
 }

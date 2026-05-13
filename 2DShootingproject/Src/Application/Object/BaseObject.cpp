@@ -15,3 +15,5 @@ void BaseObject::Draw()
 void BaseObject::Release()
 {
 }
+
+

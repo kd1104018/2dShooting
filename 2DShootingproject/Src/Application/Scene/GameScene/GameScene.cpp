@@ -33,7 +33,7 @@ void GameScene::Init()
 
 	std::random_device rd;
 	std::mt19937 mt(rd());
-	
+
 	const float screenRightX = 600.0f; // 画面右端の X 座標（必要に応じて変更）
 	std::uniform_real_distribution<float> distY(-500.0f, 500.0f); // Y 範囲
 
@@ -142,64 +142,27 @@ void GameScene::Update()
 		if (m_enemySpawnTimer <= 0)
 		{
 			m_enemySpawnTimer--;
+			if (m_enemySpawnTimer <= 0) {
+				int type = rand() % 3;
+				float randomY = (float)(rand() % 400 - 200); // 画面中央付近のランダムな高さ
 
-			if (m_enemySpawnTimer <= 0)
-			{
-				// 上から降らせる設定（X座標はランダム）
-				float randomX = (float)(rand() % 1000 - 500);
+				if (type == 0) SpawnWallFormation();   // 壁が来る
+				if (type == 1) SpawnArrowFormation(randomY);  // 矢印が来る
+				if (type == 2) SpawnEnemy(0, randomY); // 単体で来る
 
-				// ーーーーーーーーーーーーーーーーーーーーーーーーー
-				// ★ フェーズ1：まだ普通の敵が10体出ていない時
-				// ーーーーーーーーーーーーーーーーーーーーーーーーー
-				if (m_spawnedEnemyCount < 2)
-				{
-					std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
-					enemy->Init();
-					enemy->SetOwner(this);
-					enemy->SetPos({ randomX, 500.0f, 0.0f });
-					enemy->SetAttackType(rand() % 2); // まっすぐか狙うかランダム
-					m_objList.push_back(enemy);
+				m_enemySpawnTimer = 150;
+				std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
+				enemy->SetAttackType(rand() % 2);
 
-					m_spawnedEnemyCount++; // ★敵を出したらカウントを1増やす！
-				}
-				// ーーーーーーーーーーーーーーーーーーーーーーーーー
-				//  フェーズ2：普通の敵が10体以上出た後
-				// ーーーーーーーーーーーーーーーーーーーーーーーーー
-				else
-				{
-					int enemyChoice = rand() % 2; // 0か1をランダムで決める
+				
+				
 
-					if (enemyChoice == 0)
-					{
-						// 今までの敵を出す
-						std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
-						enemy->Init();
-						enemy->SetOwner(this);
-						enemy->SetPos({ randomX, 500.0f, 0.0f });
-						enemy->SetAttackType(rand() % 2);
-						m_objList.push_back(enemy);
-					}
-					else
-					{
-						// 新しい敵（SecondEnemy）を出す
-						std::shared_ptr<SecondEnemy> secondEnemy = std::make_shared<SecondEnemy>();
-						secondEnemy->Init();
-						secondEnemy->SetOwner(this);
-						secondEnemy->SetPos({ randomX, 500.0f, 0.0f });
-						m_objList.push_back(secondEnemy);
-					}
-				}
 
-				// 次の出現までの時間をセット
-				m_enemySpawnTimer = m_spawnInterval;
-
-				// ★少しずつ出現ペースを速くする（20フレーム間隔が限界）
-				if (m_spawnInterval > 30) {
-					m_spawnInterval -= 2;
-				}
 			}
 		}
 	}
+
+
 	if (GetAsyncKeyState('P'))
 	{
 		m_score += 100;
@@ -216,15 +179,15 @@ void GameScene::Update()
 	if (!m_isBossMode && m_score >= 5000) {
 		m_isBossMode = true;
 
-		
+
 		for (const auto& obj : m_objList) {
 			if (obj->GetObjType() == BaseObject::ObjectType::Enemy ||
 				obj->GetObjType() == BaseObject::ObjectType::SecondEnemy) {
-					obj->OnHit(); // 敵オブジェクトの OnHit を呼び出して爆破させる
+				obj->OnHit(); 
 			}
 		}
 
-		
+
 
 		// 3. ボス登場！
 		std::shared_ptr<Boss> boss;
@@ -284,7 +247,7 @@ void GameScene::Draw2D()
 
 		// 画面上の表示位置
 		float xPos = 100 - (i * 35);
-		float yPos = 230;
+		float yPos = 300;
 
 
 		float drawY = yPos;
@@ -302,7 +265,7 @@ void GameScene::Draw2D()
 				float cdRate = playerPtr->GetShieldCD(); // 残り時間の割合 (0.0〜1.0)
 
 				// 1. アイコンの土台（白：使える状態）
-				Math::Vector2 iconPos = { -580, -300 };
+				Math::Vector2 iconPos = { -580, 300 };
 				KdShaderManager::GetInstance().m_spriteShader.DrawTex(
 					&m_shieldTex, (int)iconPos.x, (int)iconPos.y, 64, 64);
 
@@ -329,6 +292,45 @@ void GameScene::Draw2D()
 	}
 }
 
+
 void GameScene::Release()
 {
+}
+void GameScene::SpawnEnemy(float offsetX, float y) {
+	auto enemy = std::make_shared<Enemy>();
+	enemy->Init();
+	enemy->SetOwner(this);
+
+	// Xは画面右端(700) + 陣形ごとのズレ(offsetX)
+	// Yは引数で指定された高さ
+	enemy->SetPos({ 700.0f + offsetX, y, 0.0f });
+	enemy->SetAttackType(rand() % 2); 
+	m_objList.push_back(enemy);
+}
+void GameScene::SpawnWallFormation() {
+	float x = 0.0f;
+	// 上下に2体ずつ配置（中央をあける）
+	SpawnEnemy(x, 200.0f);
+	SpawnEnemy(x, 100.0f);
+
+	SpawnEnemy(x, -100.0f);
+	SpawnEnemy(x, -200.0f);
+}
+
+void GameScene::SpawnVFormation(float y) {
+	SpawnEnemy(0.0f, y);          // 先頭（中央）
+	SpawnEnemy(100.0f, y + 100.0f); // 右上後ろ
+	SpawnEnemy(100.0f, y - 100.0f); // 右下後ろ
+}
+
+// --- 2. 上下を塞ぐ壁型（中央だけ空ける） ---
+
+
+// --- 3. 矢印型（より鋭い突撃陣形） ---
+void GameScene::SpawnArrowFormation(float y) {
+	SpawnEnemy(0.0f, y);          // 先頭
+	SpawnEnemy(80.0f, y + 60.0f);
+	SpawnEnemy(80.0f, y - 60.0f);
+	SpawnEnemy(160.0f, y + 120.0f);
+	SpawnEnemy(160.0f, y - 120.0f);
 }

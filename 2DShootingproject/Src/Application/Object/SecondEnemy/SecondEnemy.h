@@ -12,6 +12,7 @@ public:
 	void Draw()   override;
 	void Init()   override;
 	void OnHit()  override;
+	
 
 	void SetOwner(GameScene* owner) { m_owner = owner; }
 	void SetPos(Math::Vector3 pos) { m_pos = pos; }

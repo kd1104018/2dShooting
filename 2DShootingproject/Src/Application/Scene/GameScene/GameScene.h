@@ -17,6 +17,8 @@ public:
 	void Draw2D()override;
 	void Release()override;
 
+
+
 	std::vector<std::shared_ptr<BaseObject>> GetObjList()
 	{
 		return m_objList;
@@ -31,6 +33,17 @@ public:
 	unsigned long m_score = 0;
 
 	const std::shared_ptr<BaseObject>& GetPlayer() const { return m_player; }
+
+
+
+	void SpawnEnemy(float offsetX, float y);
+	void SpawnSecondEnemy(float offsetX, float y);
+
+	// --- 陣形パターン関数 ---
+	void SpawnVFormation(float y);       // V字型（くの字）
+	void SpawnWallFormation();           // 上下を塞ぐ壁型
+	void SpawnArrowFormation(float y);    // 右から突き進む矢印型
+	void SpawnRainFormation();
 private:
 
 	float m_alpha = 1.0f;
@@ -87,5 +100,7 @@ private:
 
 	float m_bgX = 0.0f;
 	const float m_ScrollSpeed = 2.0f; // 背景のスクロール速度
+
+
 
 };

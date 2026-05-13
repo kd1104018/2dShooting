@@ -26,6 +26,8 @@ public:
 	virtual void Init();
 	virtual void Draw();
 	virtual void OnHit() {}	// 当たったときの処理
+
+	
 	ObjectType GetObjType() { return m_objType; }
 	Math::Vector3 GetPos() { return m_pos; }
 	bool GetAliveFlg() { return m_aliveFlg; }
@@ -35,7 +37,8 @@ public:
 
 	bool GetAliveFlg() const { return m_aliveFlg; }
 	void SetAliveFlg(bool _flag) { m_aliveFlg = _flag; }
-	// protected : このクラスと派生先のクラス内からのみアクセス可能
+
+
 protected:
 
 	virtual void Release();

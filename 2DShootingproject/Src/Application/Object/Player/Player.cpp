@@ -3,7 +3,7 @@
 #include"../Bullet/Bullet.h"
 #include"../Life/Life.h"	
 #include"../Shield/Shield.h"
-#include <algorithm>
+
 
 void Player::Update()
 {
@@ -41,14 +41,14 @@ void Player::Update()
 	// ----------------------------
 	for (auto& obj : m_owner->GetObjList())
 	{
-		if (obj->GetObjType() == ObjectType::Enemy || obj->GetObjType() == ObjectType::EnemyBullet||obj->GetObjType()==ObjectType::BossBullet)
+		if (obj->GetObjType() == ObjectType::Enemy || obj->GetObjType() == ObjectType::EnemyBullet || obj->GetObjType() == ObjectType::BossBullet)
 		{
 
 			// 無敵状態なら判定をスキップ
 			if (m_invincibleTimer > 0.0f || m_shieldTime > 0.0f) {
 				continue;
 			}
-			if(m_isInvincible==true)
+			if (m_isInvincible == true)
 			{
 				continue;
 			}
@@ -61,9 +61,14 @@ void Player::Update()
 			if (obj->GetObjType() == ObjectType::Enemy) {
 				hitRange = 64.0f; // 敵本体用
 			}
+			else if (obj->GetObjType()==ObjectType::BossBullet)
+			{
+				hitRange = 55.0f; 
+			}
 			else {
 				hitRange = 16.0f; // 弾用
-			}
+			} 
+			
 
 			// ★ここを distance < hitRange だけにする（さっきの 64.0f の if は不要）
 			if (distance < hitRange)

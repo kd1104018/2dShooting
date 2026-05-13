@@ -29,24 +29,24 @@ void SecondEnemy::Update()
 		bullet->SetPos(m_pos); // 自分の位置から発射
 
 		// 弾の飛んでいく方向をセット（例：まっすぐ下に向かってスピード5.0fで飛ぶ）
-		
-			
-			Math::Vector3 playerPos = m_pos;
-			// リストからプレイヤーを探す
-			for (auto& obj : m_owner->GetObjList()) {
-				if (obj->GetObjType() == ObjectType::Player) {
-					playerPos = obj->GetPos();
-					break;
-				}
-			}
 
-			// 敵からプレイヤーへの「向き（ベクトル）」を計算
-			Math::Vector3 dir = playerPos - m_pos;
-			if (dir.Length() > 0) {
-				dir.Normalize(); // 長さを「1」にする
-				bullet->SetMoveVec(dir * 10.0f); // 「向き × スピード(5.0f)」をセット！
+
+		Math::Vector3 playerPos = m_pos;
+		// リストからプレイヤーを探す
+		for (auto& obj : m_owner->GetObjList()) {
+			if (obj->GetObjType() == ObjectType::Player) {
+				playerPos = obj->GetPos();
+				break;
 			}
-		
+		}
+
+		// 敵からプレイヤーへの「向き（ベクトル）」を計算
+		Math::Vector3 dir = playerPos - m_pos;
+		if (dir.Length() > 0) {
+			dir.Normalize(); // 長さを「1」にする
+			bullet->SetMoveVec(dir * 10.0f); // 「向き × スピード(5.0f)」をセット！
+		}
+
 
 		// シーンに弾を追加
 		m_owner->AddObject(bullet);
@@ -78,7 +78,7 @@ void SecondEnemy::Update()
 		}
 	}
 
-	
+
 	if (m_pos.y < -400.0f) {
 		m_aliveFlg = false;
 	}
@@ -95,7 +95,7 @@ void SecondEnemy::Draw()
 
 void SecondEnemy::Init()
 {
-	
+
 	m_tex.Load("Texture/secondenemy.png");
 	m_pos = {};
 	m_aliveFlg = true;

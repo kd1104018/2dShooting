@@ -14,7 +14,7 @@ void Shield::Draw()
 	{
 		Math::Rectangle rc = { 0,0,80,80 };
 		KdShaderManager::GetInstance().m_spriteShader.DrawTex(
-			&m_tex, m_pos.x, m_pos.y, 80, 80, &rc);
+			&m_tex, m_pos.x, m_pos.y, 100, 90, &rc);
 	}
 }
 

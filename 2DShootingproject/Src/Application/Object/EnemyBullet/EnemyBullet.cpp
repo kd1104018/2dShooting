@@ -4,7 +4,7 @@
 void EnemyBullet::Update()
 {
 	// セットされた方向に飛ぶ
-	m_pos += m_moveVec;
+	m_pos += m_dir * m_speed;
 
 	// 画面外に出たら消える
 	if (m_pos.y < -360.0f || m_pos.x < -640.0f || m_pos.x > 640.0f || m_pos.y > 360.0f) {
