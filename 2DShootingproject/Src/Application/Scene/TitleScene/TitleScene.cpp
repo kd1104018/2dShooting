@@ -5,6 +5,9 @@ void TitleScene::Init()
 {
 	m_tex.Load("Texture/title.png");
 	m_starttex.Load("Texture/startbtn.png");
+	m_rogotex.Load("Texture/rogo.png");
+
+	m_logoPos = { 0, 100 };
 
 }
 
@@ -60,7 +63,10 @@ void TitleScene::Draw2D()
 		(int)(800 * m_btnscale),     // 幅（スケール適用）
 		(int)(400 * m_btnscale),      // 高さ（スケール適用）
 		nullptr, &color);
-
+	KdShaderManager::GetInstance().m_spriteShader.DrawTex(&m_rogotex,
+		(int)m_logoPos.x, (int)m_logoPos.y,
+		512, 128,    // ロゴの表示サイズ（画像の比率に合わせて調整してください）
+		nullptr);
 
 
 

@@ -124,7 +124,7 @@ void Player::Update()
 			m_shotTimer = 10;
 		}
 	}
-	if (GetAsyncKeyState('L') & 0x8000) {
+	if (GetAsyncKeyState('A') & 0x8000) {
 		m_isInvincible = true;
 	}
 	else {

@@ -116,7 +116,7 @@ void Boss::Update()
 		}
 		else {
 			ShootSpread();         // 拡散弾は一瞬で撃つ
-			m_attackTimer = 120;   // 撃った後の硬直時間
+			m_attackTimer = 60;   // 撃った後の硬直時間
 		}
 	}
 
@@ -185,7 +185,7 @@ void Boss::ShootSpread() {
 	if (!m_owner) return;
 
 	// 5方向くらいに広げる
-	for (int i = -2; i <= 2; i++) {
+	for (int i = -5; i <= 5; i++) {
 		auto bullet = std::make_shared<BossBullet>();
 		bullet->Init();
 		bullet->SetPos(m_pos);

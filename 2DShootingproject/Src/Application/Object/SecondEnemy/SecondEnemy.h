@@ -17,6 +17,9 @@ public:
 	void SetOwner(GameScene* owner) { m_owner = owner; }
 	void SetPos(Math::Vector3 pos) { m_pos = pos; }
 
+
+	void SetAttackType(int type) { m_attackType = type; }
+
 private:
 	void Release() override;
 	GameScene* m_owner = nullptr;
@@ -24,5 +27,7 @@ private:
 	
 	float m_angle = 0.0f;
 
+	int m_attackType = 0;
+	
 	int m_shotTimer = 60;
 };

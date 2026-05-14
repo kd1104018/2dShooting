@@ -7,51 +7,50 @@
 void SecondEnemy::Update()
 {
 
-	// ーーーーー 既存の移動処理 ーーーーー
-	m_pos.y -= 3.0f;
-	m_pos.x += std::sin(m_angle) * 5.0f;
+	m_pos.x -= 5.0f;
+	
 	m_angle += 0.1f;
 
 	// 画面の下に出たら消える
-	if (m_pos.y < -500.0f) {
-		m_aliveFlg = false;
-	}
 
-	// ーーーーー ★追加：弾の発射処理 ーーーーー
+	
+
+	
 	m_shotTimer--;
 
 	if (m_shotTimer <= 0)
 	{
-		// 弾を作る
 		std::shared_ptr<EnemyBullet> bullet = std::make_shared<EnemyBullet>();
 		bullet->Init();
 		bullet->SetOwner(m_owner);
-		bullet->SetPos(m_pos); // 自分の位置から発射
+		bullet->SetPos(m_pos);
 
-		// 弾の飛んでいく方向をセット（例：まっすぐ下に向かってスピード5.0fで飛ぶ）
+		if (m_attackType == 0) {
+
+			bullet->SetDir({ -3.0f, 0.0f, 0.0f });
+			bullet->SetSpeed(5.0f);
+		}
+		else {
+			// 【タイプ1】プレイヤーを狙って撃つ
+			Math::Vector3 playerPos = m_pos;
+			for (auto& obj : m_owner->GetObjList()) {
+				if (obj->GetObjType() == ObjectType::Player) {
+					playerPos = obj->GetPos();
+					break;
+				}
+			}
+
+			Math::Vector3 dir = playerPos - m_pos;
+			if (dir.Length() > 0) {
+				dir.Normalize();
 
 
-		Math::Vector3 playerPos = m_pos;
-		// リストからプレイヤーを探す
-		for (auto& obj : m_owner->GetObjList()) {
-			if (obj->GetObjType() == ObjectType::Player) {
-				playerPos = obj->GetPos();
-				break;
+				bullet->SetDir(dir);      // 向きをセット
+				bullet->SetSpeed(10.0f);   // スピードをセット
 			}
 		}
 
-		// 敵からプレイヤーへの「向き（ベクトル）」を計算
-		Math::Vector3 dir = playerPos - m_pos;
-		if (dir.Length() > 0) {
-			dir.Normalize(); // 長さを「1」にする
-			bullet->SetMoveVec(dir * 10.0f); // 「向き × スピード(5.0f)」をセット！
-		}
-
-
-		// シーンに弾を追加
 		m_owner->AddObject(bullet);
-
-		// 次に撃つまでの時間をセット（120フレーム＝2秒）
 		m_shotTimer = 120;
 	}
 	for (auto& obj : m_owner->GetObjList())
@@ -86,8 +85,7 @@ void SecondEnemy::Update()
 
 void SecondEnemy::Draw()
 {
-	// ★"Texture/SecondEnemy.png" など、新しい画像を用意するか、
-	// 既存の敵画像を使い回してもOKです！
+	
 	Math::Rectangle rc = { 0, 0, 64, 64 };
 	KdShaderManager::GetInstance().m_spriteShader.DrawTex(
 		&m_tex, m_pos.x, m_pos.y, 64, 64, &rc);
@@ -108,7 +106,7 @@ void SecondEnemy::OnHit()
 {
 	// 弾やプレイヤーに当たったら消える
 	m_aliveFlg = false;
-	m_owner->m_score += 300;
+	m_owner->m_score += 100;
 	if (m_owner) {
 		auto exp = std::make_shared<Explosion>();
 		exp->Init();

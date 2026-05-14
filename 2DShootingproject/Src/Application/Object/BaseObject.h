@@ -47,4 +47,5 @@ protected:
 	Math::Vector3	m_pos = {};				// 座標
 	bool			m_aliveFlg = true;	// 生存フラグ
 	ObjectType		m_objType = ObjectType::None;
+	int attackType = 0; // 攻撃の種類（0なら「まっすぐ」、1なら「狙う」
 };

@@ -83,129 +83,93 @@ void GameScene::Update()
 		m_alpha = 0.4f;
 		m_alphaadd *= -1;
 	}
-	auto it = m_objList.begin();
+	
 
-	// 1) 無効オブジェクトの削除
-	while (it != m_objList.end())
-	{
-		if ((*it)->GetAliveFlg() == false)
-		{
+	auto it = m_objList.begin();
+	while (it != m_objList.end()) {
+		if (!(*it) || (*it)->GetAliveFlg() == false) {
 			it = m_objList.erase(it);
 		}
-		else
-		{
+		else {
 			++it;
 		}
 	}
 
-	// 2) 全オブジェクトの更新
-	for (size_t i = 0; i < m_objList.size(); ++i)
-	{
-		m_objList[i]->Update();
+	
+	for (size_t i = 0; i < m_objList.size(); ++i) {
+		if (m_objList[i]) m_objList[i]->Update();
 	}
 
-
-
-	// 3) ライフ残数チェック（BaseObject にネストされた enum を完全修飾して比較）
+	// --- 3. ライフとゲームオーバー判定 ---
 	int remainLife = 0;
 	for (const auto& obj : m_objList) {
-		if (obj->GetObjType() == BaseObject::ObjectType::Life) ++remainLife;
+		if (obj && obj->GetObjType() == BaseObject::ObjectType::Life) ++remainLife;
 	}
 
-	// 4) ライフが0ならプレイヤーをリストから削除してシーン遷移をセット
 	if (remainLife == 0) {
-		for (auto it2 = m_objList.begin(); it2 != m_objList.end(); ++it2) {
-			if ((*it2)->GetObjType() == BaseObject::ObjectType::Player) {
-				m_objList.erase(it2);
-				break;
-			}
-		}
 		SceneManager::Instance().SetFinalScore(m_score);
 		SceneManager::Instance().SetNextScene(SceneManager::SceneType::GameOver);
-		return;
+		return; // ゲームオーバーならここで終了
 	}
-	// ここでプレイヤー追従シールドの位置を毎フレーム更新
-	if (m_shield && m_player) { // m_shield は Init で保持した自機用
+
+	// --- 4. シールド追従など ---
+	if (m_shield && m_player) {
 		m_shield->SetPos(m_player->GetPos());
-
-		std::shared_ptr<Player> playerPtr = std::dynamic_pointer_cast<Player>(m_player);
-		if (playerPtr) {
-			m_shield->SetVisible(playerPtr->IsShieldActive());
-		}
+		auto playerPtr = std::dynamic_pointer_cast<Player>(m_player);
+		if (playerPtr) m_shield->SetVisible(playerPtr->IsShieldActive());
 	}
-	m_gameTimer++; // 毎フレーム時間を加算
 
-	// 300フレーム（約5秒）経過してから敵を出し始める
-	if (!m_isBossMode && m_gameTimer > 300)
-	{
+	// --- 5. 敵の出現管理 (整理しました) ---
+	m_gameTimer++;
+
+	if (!m_isBossMode && m_gameTimer > 300) {
 		m_enemySpawnTimer--;
-		if (m_enemySpawnTimer <= 0)
-		{
-			m_enemySpawnTimer--;
-			if (m_enemySpawnTimer <= 0) {
-				int type = rand() % 3;
-				float randomY = (float)(rand() % 400 - 200); // 画面中央付近のランダムな高さ
+		if (m_enemySpawnTimer <= 0) {
+			// 出現率の調整
+			int dice = rand() % 100;
+			float randomY = (float)(rand() % 400 - 200);
 
-				if (type == 0) SpawnWallFormation();   // 壁が来る
-				if (type == 1) SpawnArrowFormation(randomY);  // 矢印が来る
-				if (type == 2) SpawnEnemy(0, randomY); // 単体で来る
-
-				m_enemySpawnTimer = 150;
-				std::shared_ptr<Enemy> enemy = std::make_shared<Enemy>();
-				enemy->SetAttackType(rand() % 2);
-
-				
-				
-
-
+			if (dice < 30) {
+				SpawnWallFormation();      // 30%で壁(SecondEnemy含む)
 			}
+			else if (dice < 60) {
+				SpawnArrowFormation(randomY); // 30%で矢印
+			}
+			else {
+				SpawnEnemy(0, randomY);    // 40%で単体
+			}
+
+			m_enemySpawnTimer = 90; // 次回までのインターバル
 		}
 	}
 
-
-	if (GetAsyncKeyState('P'))
-	{
-		m_score += 100;
-	}
-	if (remainLife == 0) {
-		// 遷移する前にスコアを保存！
-		SceneManager::Instance().SetFinalScore(m_score);
-
-		SceneManager::Instance().SetNextScene(SceneManager::SceneType::GameOver);
-		return;
-	}
-	//クリアー条件スコア5000点
-
-	if (!m_isBossMode && m_score >= 5000) {
+	// --- 6. ボスモードへの移行 ---
+	if (!m_isBossMode && m_score >= 10000) {
 		m_isBossMode = true;
 
-
-		for (const auto& obj : m_objList) {
+		// ザコ敵を全滅させる
+		for (auto& obj : m_objList) {
+			if (!obj) continue;
 			if (obj->GetObjType() == BaseObject::ObjectType::Enemy ||
 				obj->GetObjType() == BaseObject::ObjectType::SecondEnemy) {
-				obj->OnHit(); 
+				obj->OnHit(); // 爆発させる
 			}
 		}
 
-
-
-		// 3. ボス登場！
-		std::shared_ptr<Boss> boss;
-		boss = std::make_shared<Boss>();
+		// ボス生成
+		auto boss = std::make_shared<Boss>();
 		boss->Init();
 		boss->SetOwner(this);
-		boss->SetPos({ 800.0f, 0.0f, 0.0f }); // 右からゆっくり登場
+		boss->SetPos({ 800.0f, 0.0f, 0.0f });
 		m_objList.push_back(boss);
 
+		// メンバ変数の m_boss に覚えさせておく（生存チェック用）
+		m_boss = boss;
+	}
 
-
-
-
-
-
-
-		// 5. ボスが倒されたらクリア画面へ
-		if (m_isBossMode && m_boss && !m_boss->GetAliveFlg()) {
+	// --- 7. クリア判定 (ボス登場時のみチェック) ---
+	if (m_isBossMode && m_boss) {
+		if (!m_boss->GetAliveFlg()) {
 			SceneManager::Instance().SetFinalScore(m_score);
 			SceneManager::Instance().SetNextScene(SceneManager::SceneType::GameClear);
 		}
@@ -290,6 +254,11 @@ void GameScene::Draw2D()
 
 		}
 	}
+	//スコアを増やすデバッグきー
+	if (GetAsyncKeyState('S') & 0x8000) 
+	{
+		m_score += 1000;
+	}
 }
 
 
@@ -304,7 +273,7 @@ void GameScene::SpawnEnemy(float offsetX, float y) {
 	// Xは画面右端(700) + 陣形ごとのズレ(offsetX)
 	// Yは引数で指定された高さ
 	enemy->SetPos({ 700.0f + offsetX, y, 0.0f });
-	enemy->SetAttackType(rand() % 2); 
+	enemy->SetAttackType(rand() % 2);
 	m_objList.push_back(enemy);
 }
 void GameScene::SpawnWallFormation() {
@@ -328,9 +297,20 @@ void GameScene::SpawnVFormation(float y) {
 
 // --- 3. 矢印型（より鋭い突撃陣形） ---
 void GameScene::SpawnArrowFormation(float y) {
-	SpawnEnemy(0.0f, y);          // 先頭
-	SpawnEnemy(80.0f, y + 60.0f);
-	SpawnEnemy(80.0f, y - 60.0f);
-	SpawnEnemy(160.0f, y + 120.0f);
-	SpawnEnemy(160.0f, y - 120.0f);
+	SpawnSecondEnemy(0.0f, y);          // 先頭
+	SpawnSecondEnemy(80.0f, y + 60.0f);
+	SpawnSecondEnemy(80.0f, y - 60.0f);
+	SpawnSecondEnemy(160.0f, y + 120.0f);
+	SpawnSecondEnemy(160.0f, y - 120.0f);
+}
+void GameScene::SpawnSecondEnemy(float offsetX, float y) {
+	auto sEnemy = std::make_shared<SecondEnemy>();
+	sEnemy->Init();
+	sEnemy->SetOwner(this);
+	sEnemy->SetPos({ 720.0f + offsetX, y, 0.0f });
+
+	// SecondEnemy にも攻撃タイプをセット
+	sEnemy->SetAttackType(rand() % 2);
+
+	m_objList.push_back(sEnemy);
 }

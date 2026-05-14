@@ -9,7 +9,7 @@ class GameScene : public BaseScene
 public:
 
 	GameScene() { Init(); }
-	~GameScene() {}
+	~GameScene() { Release(); }
 
 	//オーバーライドは基底クラスの関数を上書きする
 	void Init()override;
